@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atelier | Minha Arte</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        /* Reset básico */
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Corpo da página */
+        body {
+            min-height: 100vh;
+            font-family: Arial, Helvetica, sans-serif;
+            color: #f2f2f2;
+
+            /* Fundo artístico */
+            background-image: url("fundo-artistico.png");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        /* Camada escura */
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background: rgba(20, 15, 10, 0.75);
+            z-index: -1;
+        }
+
+        .topo {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 30px 40px;
+        }
+
+        .topo h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 36px;
+            letter-spacing: 1px;
+        }
+
+        #btn-voltar {
+            background: none;
+            border: 1px solid #c7bfa8;
+            color: #c7bfa8;
+            cursor: pointer;
+        }
+
+        .galeria {
+            display: flex;
+           grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+           gap: 30px;
+           padding: 40px;
+        }
+
+        .arte {
+            position: relative;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 12px;
+            border-radius: 8px;
+        }
+
+        .imagem {
+            height: 160px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 4px;
+        }
+
+        .estrela {
+            position: absolute;
+            top: 8px;
+            right: 10px;
+            cursor: pointer;
+            font-size: 18px;
+            color: #d8c27a;
+
+        }
+
+        .favorito .estrela {
+            content: "★";
+        }
+        
+
+    
+    </style>
+</head>
+<body>
+    <!-- Cabeçalho -->
+    <header class="topo">
+        <button id="btn-voltar">Voltar</button>
+        <h1>Minha Arte</h1>
+        <label class="favoritos-toggle">
+            <input type="checkbox" id="filtro-favoritos">
+            Mostrar só favoritos
+        </label>
+    </header>
+
+    <!-- Galeria -->
+     <main class="galeria">
+
+        <!-- card de arte -->
+         <div class="arte" data-id="1">
+            <span class="estrela">☆</span>
+            <div class="imagem"></div>
+         </div>
+
+         <div class="arte" data-id="2">
+            <span class="estrela">☆</span>
+            <div class="imagem"></div>
+         </div>
+
+         <div class="arte" data-id="3">
+            <span class="estrela">☆</span>
+            <div class="imagem"></div>
+         </div>
+     </main>
+     <script>
+        "use strict";
+
+        // Protege a página
+        if(localStorage.getItem("atelier_logado") !== "true") {
+            window.location.href = "index.html";
+        }
+
+        // Botão voltar
+        document.querySelector("#btn-voltar").addEventListener("click", function () {
+            window.location.href = "home.html";
+        });
+
+        // Seleciona todas as artes
+        const artes = document.querySelectorAll(".arte");
+
+        // Carrega favoritas salvos
+        let favoritos = JSON.parse(localStorage.getItem("atelier_favoritos")) || [];
+
+        // Marca favoritos ao carregar 
+        artes.forEach(arte => {
+            const id = arte.dataset.id;
+
+            if (favoritos.includes(id)) {
+                arte.classList.add("favorito");
+                arte.querySelector(".estrela").textContent = "★";
+            }
+
+            // Clique na estrela 
+            arte.querySelector(".estrela").addEventListener("click", function () {
+                if (favoritos.includes(id)) {
+                    favoritos = favoritos.filter(item => item !== id);
+                    arte.classList.remove("favorito");
+                    thid.textContent = "☆";
+                } else {
+                    favoritos.push(id);
+                    arte.classList.add("favoritos");
+                    this.textContent = "☆";
+                }
+
+                localStorage.setItem("atelier_favoritos", JSON.stringify(favoritos))
+            });
+        });
+
+        // Filtro de favoritos
+        document.querySelector("#filtro-favoritos").addEventListener("change", function () {
+            artes.forEach(arte => {
+                if (this.checked && !arte.classList.contains("favorito")) {
+                    arte.style.display = "none";
+                } else {
+                    arte.style.display = "block";
+                }
+            });
+        });
+     </script>
+</body>
+
+
+</html>
