@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Atelier | Exposed</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg-1: #0f0f10;
+      --bg-2: #171719;
+      --text: #f2f2f2;
+
+      --paper: #f3f0ea;
+      --paper-2: #ede7dd;
+      --ink: #1a1a1a;
+
+      --tape: rgba(220, 210, 185, 0.75);
+      --tape-edge: rgba(120, 105, 80, 0.25);
+
+      --shadow: 0 18px 40px rgba(0,0,0,0.35);
+      --soft: 0 10px 25px rgba(0,0,0,0.22);
+    }
+
+    *{ box-sizing: border-box; margin: 0; padding: 0; }
+
+    body{
+      min-height: 100vh;
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--text);
+
+      background:
+        radial-gradient(900px 500px at 20% 10%, rgba(255,255,255,0.06), transparent 60%),
+        radial-gradient(700px 400px at 80% 30%, rgba(255,255,255,0.05), transparent 55%),
+        linear-gradient(180deg, var(--bg-2), var(--bg-1));
+    }
+
+    .wrap{
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 28px 18px 60px;
+    }
+
+    .top{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+
+    .voltar{
+      border: 1px solid rgba(255,255,255,0.20);
+      background: rgba(255,255,255,0.06);
+      color: var(--text);
+      padding: 10px 14px;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+    .voltar:hover{ background: rgba(255,255,255,0.10); }
+
+    .titulo{
+      text-align: center;
+      flex: 1;
+      font-family: "Cormorant Garamond", serif;
+    }
+    .titulo h1{
+      font-size: 46px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+    .titulo p{
+      margin-top: 4px;
+      font-size: 14px;
+      opacity: 0.75;
+      letter-spacing: 1px;
+      text-transform: lowercase;
+    }
+
+    .linha{
+      height: 1px;
+      background: rgba(255,255,255,0.12);
+      margin: 18px 0 26px;
+    }
+
+    /* Grade de "papéis" */
+    .grid{
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 18px;
+    }
+
+    /* Card de papel */
+    .paper{
+      grid-column: span 4;
+      position: relative;
+      background: linear-gradient(180deg, var(--paper), var(--paper-2));
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      padding: 14px;
+      color: var(--ink);
+      transform: rotate(var(--rot, 0deg));
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .paper:hover{
+      transform: rotate(var(--rot, 0deg)) translateY(-4px);
+      box-shadow: 0 24px 55px rgba(0,0,0,0.45);
+    }
+
+    /* "Fita" (tape) */
+    .paper::before{
+      content: "";
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%) rotate(-2deg);
+      width: 86px;
+      height: 26px;
+      background: var(--tape);
+      border: 1px solid var(--tape-edge);
+      border-radius: 6px;
+      box-shadow: var(--soft);
+      opacity: 0.95;
+    }
+
+    /* Imagem do esboço */
+    .sketch{
+      width: 100%;
+      aspect-ratio: 4 / 5;
+      object-fit: cover;
+      border-radius: 10px;
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,0.10);
+      background: rgba(0,0,0,0.04);
+      display: block;
+    }
+
+    /* Legenda */
+    .cap{
+      margin-top: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 10px;
+      font-size: 12px;
+      opacity: 0.85;
+    }
+
+    .tag{
+      font-size: 11px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(0,0,0,0.06);
+      border: 1px solid rgba(0,0,0,0.10);
+      letter-spacing: 0.4px;
+      white-space: nowrap;
+    }
+
+    /* Variações de tamanho igual ao mockup (umas maiores, outras menores) */
+    .wide{ grid-column: span 6; }
+    .tall .sketch{ aspect-ratio: 3 / 4; }
+    .wide .sketch{ aspect-ratio: 16 / 10; }
+
+    /* Rotação sutil diferente por item */
+    .r1{ --rot: -1.2deg; }
+    .r2{ --rot:  1.0deg; }
+    .r3{ --rot: -0.6deg; }
+    .r4{ --rot:  1.6deg; }
+    .r5{ --rot: -1.8deg; }
+    .r6{ --rot:  0.8deg; }
+
+    /* Responsivo */
+    @media (max-width: 980px){
+      .paper{ grid-column: span 6; }
+      .wide{ grid-column: span 12; }
+    }
+    @media (max-width: 620px){
+      .top{ align-items: flex-start; }
+      .titulo h1{ font-size: 38px; }
+      .paper{ grid-column: span 12; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="top">
+      <button class="voltar" onclick="history.back()">Voltar</button>
+
+      <div class="titulo">
+        <h1>Exposed</h1>
+        <p>esboços de arte</p>
+      </div>
+
+      <div style="width:110px"></div>
+    </div>
+
+    <div class="linha"></div>
+
+    <section class="grid">
+      <!-- Troque os src pelas suas imagens -->
+      <article class="paper r1">
+        <img class="sketch" src="esboco-01.jpg" alt="Esboço 01">
+        <div class="cap">
+          <span>Estudo de figura</span>
+          <span class="tag">grafite</span>
+        </div>
+      </article>
+
+      <article class="paper r2">
+        <img class="sketch" src="esboco-02.jpg" alt="Esboço 02">
+        <div class="cap">
+          <span>Rosto / perfil</span>
+          <span class="tag">estudo</span>
+        </div>
+      </article>
+
+      <article class="paper r3">
+        <img class="sketch" src="esboco-03.jpg" alt="Esboço 03">
+        <div class="cap">
+          <span>Detalhe: olhos</span>
+          <span class="tag">sombras</span>
+        </div>
+      </article>
+
+      <article class="paper wide r4">
+        <img class="sketch" src="esboco-04.jpg" alt="Esboço 04">
+        <div class="cap">
+          <span>Arquitetura / cenário</span>
+          <span class="tag">linhas</span>
+        </div>
+      </article>
+
+      <article class="paper r5 tall">
+        <img class="sketch" src="esboco-05.jpg" alt="Esboço 05">
+        <div class="cap">
+          <span>Figura em movimento</span>
+          <span class="tag">gestual</span>
+        </div>
+      </article>
+
+      <article class="paper r6">
+        <img class="sketch" src="esboco-06.jpg" alt="Esboço 06">
+        <div class="cap">
+          <span>Paisagem</span>
+          <span class="tag">valores</span>
+        </div>
+      </article>
+    </section>
+  </div>
+</body>
+</html>
