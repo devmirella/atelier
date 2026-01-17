@@ -1,256 +1,261 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Atelier | Exposed</title>
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Atelier | Exposed </title>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&display=swap" rel="stylesheet">
-
+ 
   <style>
-    :root{
-      --bg-1: #0f0f10;
-      --bg-2: #171719;
-      --text: #f2f2f2;
 
-      --paper: #f3f0ea;
-      --paper-2: #ede7dd;
-      --ink: #1a1a1a;
+    :root { /* Variáveis globais de CSS */
+      --bg-1: #0f0f10; /* Cor de fundo escura principal */
+      --bg-2: #171719; /* Segunda variaçãao de fundo */
+      --text: #f2f2f2; /* Cor clara do texto */
 
-      --tape: rgba(220, 210, 185, 0.75);
-      --tape-edge: rgba(120, 105, 80, 0.25);
+      --paper: #f3f0ea; /* Cor do papel */
+      --paper-2: #ede7dd; /* Segunda cor do papel (gradiente) */
+      --ink: #1a1a1a; /* Cor da "tinta" do papel */
+      
+      --tape: rgba(220, 210, 185, 0.75); /* Cor da fita adesiva */
+      --tape-edge: rgba(120, 105, 80, 0.25); /* Borda da fita */
 
-      --shadow: 0 18px 40px rgba(0,0,0,0.35);
-      --soft: 0 10px 25px rgba(0,0,0,0.22);
+      --shadow: 0 18px 40px rgba(0,0,0,0.35); /* Sombra forte */
+      --soft: 0 10px 25px rgba(0,0,0,0.22); /* Sombra suave */
+    } 
+
+    * { /* Reset básico do navegador */
+      box-sizing: border-box; margin: 0; padding: 0;
+    }
+    
+    body {
+      min-height: 100vh; /* Altura mínima igual à tela */
+      font-family: Arial, Helvetica, sans-serif; /* Fonte padrão */
+      color: var(--text); /* Cor do texto */
+
+      background-image: url("fundo-artistico.png"); /* Imagem de fundo */
+      background-size: cover; /* Faz a imagem cobrir toda a tela */
     }
 
-    *{ box-sizing: border-box; margin: 0; padding: 0; }
-
-    body{
-      min-height: 100vh;
-      font-family: Arial, Helvetica, sans-serif;
-      color: var(--text);
-
-      background:
-        radial-gradient(900px 500px at 20% 10%, rgba(255,255,255,0.06), transparent 60%),
-        radial-gradient(700px 400px at 80% 30%, rgba(255,255,255,0.05), transparent 55%),
-        linear-gradient(180deg, var(--bg-2), var(--bg-1));
+    body::before { /* Camada escura sobre o fundo */
+      content: ""; /* Necessário para  o pseudo-elemento existir */
+      position: fixed; /* Fica fixa na tela */
+      inset: 0; /* Ocupa toda a tela */
+      background: rgba(20, 15, 10, 0.75); /* Escurece o fundo */
+      z-index: -1; /* Fica atrás do conteúdo */
     }
 
-    .wrap{
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 28px 18px 60px;
+    .wrap { /* Container central */
+      max-width: 1200px; /* Largura máxima */
+      margin: 0 auto; /* Centraliza horizontalmente */
+      padding: 28px 18px 6px; /* Espaçamento interno */
     }
 
-    .top{
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      margin-bottom: 18px;
+    .top { /* Área superior */
+      display: flex; /* Layout flexível*/
+      align-items: center; /* Alinha verticalmente */
+      justify-content: space-between; /* Espaça os elementos */
+      gap: 16px; /* Espaço entre eles */
+      margin-bottom: 18px; /* Espaço inferior */
     }
 
-    .voltar{
-      border: 1px solid rgba(255,255,255,0.20);
-      background: rgba(255,255,255,0.06);
-      color: var(--text);
-      padding: 10px 14px;
-      border-radius: 12px;
-      cursor: pointer;
-      transition: 0.2s ease;
-    }
-    .voltar:hover{ background: rgba(255,255,255,0.10); }
-
-    .titulo{
-      text-align: center;
-      flex: 1;
-      font-family: "Cormorant Garamond", serif;
-    }
-    .titulo h1{
-      font-size: 46px;
-      font-weight: 600;
-      letter-spacing: 0.5px;
-    }
-    .titulo p{
-      margin-top: 4px;
-      font-size: 14px;
-      opacity: 0.75;
-      letter-spacing: 1px;
-      text-transform: lowercase;
+    .voltar { /* Botão voltar */
+      border: 1px solid rgba(255,255,255,0.20); /* Borda sutil */
+      background: rgba(255,255,255,0.06); /* Fundo translúcido */
+      color: var(--text); /* Cor do texto */
+      padding: 10px 14px; /* Tamanho interno */
+      border-radius: 12px; /* Cantos arrendondados */
+      cursor: pointer; /* Cursor clique */
+      transition: 0.2s ease; /* Animação suave */
     }
 
-    .linha{
-      height: 1px;
-      background: rgba(255,255,255,0.12);
-      margin: 18px 0 26px;
+    .voltar:hover { /* Efeito hover */
+      background: rgba(255,255,255,0.10);
     }
 
-    /* Grade de "papéis" */
-    .grid{
-      display: grid;
-      grid-template-columns: repeat(12, 1fr);
-      gap: 18px;
+    .titulo { /* Área do titulo */
+      text-align: center; /* Centralizar texto */
+      flex: 1; /* Ocupa epaço disponovel */
+      font-family: "Cormorant Garamond", serif; /* Fonte artística */
     }
 
-    /* Card de papel */
-    .paper{
-      grid-column: span 4;
-      position: relative;
-      background: linear-gradient(180deg, var(--paper), var(--paper-2));
-      border-radius: 14px;
-      box-shadow: var(--shadow);
-      overflow: hidden;
-      padding: 14px;
-      color: var(--ink);
-      transform: rotate(var(--rot, 0deg));
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    .titulo h1 { /* Título principal */
+      font-size: 46px; /* Tamanho da fonte */
+      font-weight: 600; /* Peso da fonte */
+      letter-spacing: 0.5px; /* Espaçamento entre letras */
     }
 
-    .paper:hover{
-      transform: rotate(var(--rot, 0deg)) translateY(-4px);
-      box-shadow: 0 24px 55px rgba(0,0,0,0.45);
+    .titulo p { /* Subtitulo */
+      margin-top: 4px; /* Espaço de cima */
+      font-size: 14px; /* Tamanho menor */
+      opacity: 0.75; /* Tranparência */
+      letter-spacing: 1px; /* Espaçamento entre letras */
+      text-transform: lowercase; /* Texto em minúsculas */
     }
 
-    /* "Fita" (tape) */
-    .paper::before{
-      content: "";
-      position: absolute;
-      top: 10px;
-      left: 50%;
-      transform: translateX(-50%) rotate(-2deg);
-      width: 86px;
-      height: 26px;
-      background: var(--tape);
-      border: 1px solid var(--tape-edge);
-      border-radius: 6px;
-      box-shadow: var(--soft);
-      opacity: 0.95;
+    .linha { /* Linha divisória */
+      height: 1px; /* Altura fina */
+      background: rgba(255,255,255,0.12); /* Cor da linha */
+      margin: 18px 0 26px; /* Espaçamento vertical */
     }
 
-    /* Imagem do esboço */
-    .sketch{
-      width: 100%;
-      aspect-ratio: 4 / 5;
-      object-fit: cover;
-      border-radius: 10px;
-      box-shadow: inset 0 0 0 1px rgba(0,0,0,0.10);
-      background: rgba(0,0,0,0.04);
-      display: block;
+    .grid { /* Grade de papéis */
+      display: grid; /* Ativa grid layout */
+      grid-template-columns: repeat(12, 1fr); /* 12 colunas */
+      gap: 18px; /* Espaço entre itens */
     }
 
-    /* Legenda */
-    .cap{
-      margin-top: 10px;
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      gap: 10px;
-      font-size: 12px;
-      opacity: 0.85;
+    .paper { /* Card de papel */
+      grid-column: span 4; /* Ocupa 4 colunas */
+      position: relative; /* Base para elementos internos */
+      background: linear-gradient(180deg, var(--paper), var(--paper-2)); /* Gradiente do papel */
+      border-radius: 14px; /* Cantos arrendondados */
+      box-shadow: var(--shadow); /* Sombta */
+      overflow: hidden; /* Esconde excesso */
+      padding: 14px; /* Espaçamento interno */
+      color: var(--ink); /* Cor do texto */
+      transform: rotate(var(--rot, 0deg)); /* Rotação leve */
+      transition: transform 0.2s ease, box-shadow 0.2s ease; /* Animações */
     }
 
-    .tag{
-      font-size: 11px;
-      padding: 6px 10px;
-      border-radius: 999px;
-      background: rgba(0,0,0,0.06);
-      border: 1px solid rgba(0,0,0,0.10);
-      letter-spacing: 0.4px;
-      white-space: nowrap;
+    .paper:hover { /* Houver do card */
+      transform: rotate(var(--rot, 0deg)) translateY(-4px); /* Levanta o card */
+      box-shadow: 0 24px 55px rgba(0,0,0,0.45); /* Sombra mais forte */
     }
 
-    /* Variações de tamanho igual ao mockup (umas maiores, outras menores) */
-    .wide{ grid-column: span 6; }
-    .tall .sketch{ aspect-ratio: 3 / 4; }
-    .wide .sketch{ aspect-ratio: 16 / 10; }
+    .paper::before { /* Fita adesiva */
+      content: ""; /* Cria um elemento */
+      position: absolute; 
+      top: 10px; /* Distância do topo */
+      left: 50%; /* Centraliza horizontalmente */
+      transform: translateX(-50%) rotate(-2deg); /*Ajuste fino */
+      width: 86px; /* Largura da fita */
+      height: 26px; /* Altura da fita */
+      background: var(--tape); /* Cor da fita */
+      border: 1px solid var(--tape-edge); /* Borda */
+      border-radius: 6px; /* Cantos */
+      box-shadow: var(--soft); /* Sombra suave */
+      opacity: 0.95; /* Transparência */
+    }
 
-    /* Rotação sutil diferente por item */
-    .r1{ --rot: -1.2deg; }
-    .r2{ --rot:  1.0deg; }
+    .sketch { /* Imagem do esboço */
+      width: 100%; /* Ocupa toda a largura */
+      aspect-ratio: 4 / 5; /* Proporção fixa */
+      object-fit: cover; /* Ajusta sem distorcer */
+      border-radius: 10px; /* Cantos arredondados */
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,0.10); /* Borda interna */
+      background: rgba(0,0,0,0.04); /* Fundo neutro */
+      display: block; /* Remove os espaços indesejados */
+    }
+
+    .cap { /* Legenda */
+      margin-top: 10px; /* Espaço acima */
+      display: flex; /* Layout flex */
+      justify-content: space-between; /* Espaça texto e tag */
+      align-items: baseline; /* Alinha pela base */
+      gap: 10px; /* Espaço entre elementos */
+      font-size: 12px; /* Tamanho pequeno */
+      opacity: 0.85; /* Transparência */
+    }
+
+    .tag { /* Tag da legenda */
+      font-size: 11px; /* Texto pequeno */
+      padding: 6px 10px; /* Espaçamento interno */
+      border-radius: 999px; /* Formato pill */
+      background: rgba(0,0,0,0.06); /* Fundo suave */
+    }
+
+    .wide{ grid-column: span 6; } /* Card mais largo */
+    .tall .sketch{ aspect-ratio: 3 / 4; } /* Card mais alto */
+    .wide .sketch{ aspect-ratio: 16 / 10; } /* Card horizontal */
+
+    .r1{ --rot: -1.2deg; } /* Rotação especifica */
+    .r2{ --rot: 1.0deg; }
     .r3{ --rot: -0.6deg; }
-    .r4{ --rot:  1.6deg; }
+    .r4{ --rot: 1.6deg; }
     .r5{ --rot: -1.8deg; }
-    .r6{ --rot:  0.8deg; }
+    .r6{ --rot: 0.8deg;}
 
-    /* Responsivo */
-    @media (max-width: 980px){
+    @media (max-width: 980px) { /* Responsivo tablet */
       .paper{ grid-column: span 6; }
       .wide{ grid-column: span 12; }
     }
-    @media (max-width: 620px){
+
+    @media (max-width: 620px) { /* Responsivo mobile */
       .top{ align-items: flex-start; }
       .titulo h1{ font-size: 38px; }
-      .paper{ grid-column: span 12; }
+      .paper{ grid-column: span 12;}
     }
+
   </style>
 </head>
 
-<body>
-  <div class="wrap">
-    <div class="top">
-      <button class="voltar" onclick="history.back()">Voltar</button>
+  <body>
+    <div class="wrap"> <!-- Container Central -->
 
-      <div class="titulo">
-        <h1>Exposed</h1>
-        <p>esboços de arte</p>
+      <div class="top"> <!-- Cabeçalho --> 
+        <button class="voltar" onclick="history.back()">Voltar</button> <!-- Volta á página anterior -->
+        
+        <div class="titulo"> <!-- Area do título -->
+          <h1>Exposed</h1>
+          <p>esboços de arte</p>
+        </div>
+
+        <div style="width:110px"></div> <!-- Espaçador visual -->
       </div>
 
-      <div style="width:110px"></div>
-    </div>
+      <div class="linha"></div> <!-- Linha divisória -->
 
-    <div class="linha"></div>
+      <section class="grid"> <!-- Grade dos esboços -->
 
-    <section class="grid">
-      <!-- Troque os src pelas suas imagens -->
-      <article class="paper r1">
-        <img class="sketch" src="esboco-01.jpg" alt="Esboço 01">
-        <div class="cap">
-          <span>Estudo de figura</span>
-          <span class="tag">grafite</span>
-        </div>
-      </article>
+        <article class="paper r1">
+          <img class="sketch" src="esboco-01.jpg" alt="Esboço 01">
+          <div class="cap">
+            <span>Estudo de figura</span>
+            <span class="tag">grafite</span>
+          </div>
+        </article>
 
-      <article class="paper r2">
-        <img class="sketch" src="esboco-02.jpg" alt="Esboço 02">
-        <div class="cap">
-          <span>Rosto / perfil</span>
-          <span class="tag">estudo</span>
-        </div>
-      </article>
+        <article class="paper r2">
+          <img class="sketch" src="esboco-02.jpg" alt="Esboço 02">
+          <div class="cap">
+            <span>Rosto / perfil</span>
+            <span class="tag">estudo</span>
+          </div>
+        </article>
 
-      <article class="paper r3">
-        <img class="sketch" src="esboco-03.jpg" alt="Esboço 03">
-        <div class="cap">
-          <span>Detalhe: olhos</span>
-          <span class="tag">sombras</span>
-        </div>
-      </article>
+        <article class="paper r3">
+          <img class="sketch" src="esboco-03.jpg" alt="Esboço 03">
+          <div class="cap">
+            <span>Detalhe: olhos</span>
+            <span class="tag">sombras</span>
+          </div>
+        </article>
 
-      <article class="paper wide r4">
-        <img class="sketch" src="esboco-04.jpg" alt="Esboço 04">
-        <div class="cap">
-          <span>Arquitetura / cenário</span>
-          <span class="tag">linhas</span>
-        </div>
-      </article>
+        <article class="paper wide r4">
+          <img class="sketch" src="esboco-04.jpg" alt="Esboço 04">
+          <div class="cap">
+            <span>Arquitetura / cenário</span>
+            <span class="tag">linhas</span>
+          </div>
+        </article>
 
-      <article class="paper r5 tall">
-        <img class="sketch" src="esboco-05.jpg" alt="Esboço 05">
-        <div class="cap">
-          <span>Figura em movimento</span>
-          <span class="tag">gestual</span>
-        </div>
-      </article>
+        <article class="paper r5 tall">
+          <img class="sketch" src="esboco-05.jpg" alt="Esboço 05">
+          <div class="cap">
+            <span>Figura em movimento</span>
+            <span class="tag">gestual</span>
+          </div>
+        </article>
 
-      <article class="paper r6">
-        <img class="sketch" src="esboco-06.jpg" alt="Esboço 06">
-        <div class="cap">
+        <article class="paper r6">
+          <img class="sketch" src="esboco-06.jpg" alt="Esboço 06">
+          <div class="cap">
           <span>Paisagem</span>
           <span class="tag">valores</span>
-        </div>
-      </article>
-    </section>
-  </div>
-</body>
+          </div>
+        </article>
+      </section> 
+    </div>
+  </body>
 </html>
