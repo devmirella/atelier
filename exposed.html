@@ -49,7 +49,7 @@
     .wrap { /* Container central */
       max-width: 1200px; /* Largura máxima */
       margin: 0 auto; /* Centraliza horizontalmente */
-      padding: 28px 18px 6px; /* Espaçamento interno */
+      padding: 28px 18px 40px; /* Espaçamento interno */
     }
 
     .top { /* Área superior */
@@ -185,8 +185,79 @@
     .card {
       background: linear-gradient(180deg, #f3f0ea);
       border-radius: 12px;
+      padding: 14px;
+      position: relative;
+      cursor: pointer;
     }
 
+    .card-capa {
+      font-family: "Cormorant Garamond", serif; 
+      font-size: 22px;
+      text-align: center;
+    }
+
+    .card-conteudo {
+      display: none;
+      margin-top: 12px;
+    }
+
+    .card.aberto .card-conteudo {
+      display: block;
+    }
+
+    .fechar-card {
+      position: absolute;
+      top: 6px;
+      right: 10px;
+      cursor: pointer;
+    }
+
+    .artes {
+      display: grid;
+      grid-template-columns: repeat(autofill, minmax(120px, 1fr));
+    }
+
+    .arte {
+      height: 120px;
+      background: #ccc;
+      position: relative;
+      cursor: pointer;
+    }
+
+      .arte img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .arte.expandida {
+        grid-column: 1 / -1;
+        height: 360px;
+      }
+
+      .fechar-arte {
+        position: absolute;
+        top: 6px;
+        right: 6px;
+        background: rgba(0,0,0,0.5);
+        color: #fff;
+        padding: 4px 7px;
+        border-radius: 50%;
+        display: none;
+      }
+
+      .arte.expandida .fechar-arte {
+        display: block;
+      }
+
+      .adicionar {
+        margin-top: 10px;
+        width: 100%;
+        border: 1px dashed rgba(0,0,0,0.3);
+        background: none;
+        padding: 8px;
+        cursor: pointer;
+      }
     @media (max-width: 980px) { /* Responsivo tablet */
       .paper{ grid-column: span 6; }
       .wide{ grid-column: span 12; }
@@ -221,7 +292,8 @@
       <section class="grid"> <!-- Grade dos esboços -->
 
         <article class="paper r1">
-          <img class="sketch" src="esboco-01.jpg" alt="Esboço 01">
+          <img class="sketch" src="esboco-01.jpg">
+          
 
           <div class="cap">
             <span>Estudo de figura</span>
@@ -251,7 +323,7 @@
           <div class="card interativo">
             <div class="fechar-card">X</div>
 
-            <div class="caed-capa">Rosto / perfil</div>
+            <div class="card-capa">Rosto / perfil</div>
 
             <div class="card-conteudo">
               <div class="artes"></div>
@@ -268,14 +340,14 @@
             <span class="tag">sombras</span>
           </div>
 
-          <div clas="card interativo">
+          <div class="card interativo">
             <div class="fechar-card">X</div>
 
             <div class="card-capa">Detalhe: olhos</div>
 
             <div class="card-conteudo">
               <div class="artes"></div>
-              <button classe="adicionar">+ adicionar arte</button>
+              <button class="adicionar">+ adicionar arte</button>
             </div>
           </div>
         </article>
@@ -338,8 +410,27 @@
               <button class="adicionar">+ adicionar arte</button>
             </div>
             </div>
-          </div>
         </article>
     </div>
   </body>
+
+  <script>
+    "use strict";
+
+    document.querySelector(".card").addEventListener("click", e => {
+      if (e.target.classList.contains("fechar-card")) {
+        e.currentTarget.classList.remove("aberto");
+        return;
+      }
+      e.currentTarget.classList.toggle("aberto");
+    });
+
+    document.querySelectorA(".adicionar").addEventListener("click", e => {
+      e.stopPropagation();
+      const artes = document.querySelector(".artes");
+
+      const arte = documento.creatElement("div");
+      
+    });
+  </script>
 </html>
