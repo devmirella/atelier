@@ -178,85 +178,91 @@
     .r6{ --rot: 0.8deg;}
 
 
-    .card-area {
+    .card-area { /* Epaço axima dos cards */
       margin-top: 14px;
     }
 
     .card {
-      background: linear-gradient(180deg, #f3f0ea);
-      border-radius: 12px;
-      padding: 14px;
-      position: relative;
-      cursor: pointer;
+      background: linear-gradient(180deg, #f3f0ea); /* Fundo do card */
+      border-radius: 12px; /* Cantos arrendondados */
+      padding: 14px; /* Espaçamento interno */
+      position: relative; /* Base para o botão fechar */
+      cursor: default; /* Cursor padrão */
     }
 
     .card-capa {
-      font-family: "Cormorant Garamond", serif; 
-      font-size: 22px;
-      text-align: center;
+      font-family: "Cormorant Garamond", serif; /* Fonte artística */
+      font-size: 22px;  /* Tamanho do texto */
+      font-weight: 500; /* Peso da fonte */
+      text-align: center; /* Centraliza */
+      cursor: pointer; /* Indica que é clicável */
     }
 
     .card-conteudo {
-      display: none;
-      margin-top: 12px;
+      display: none; /* Começa fechado */
+      margin-top: 12px; /* Espaço acima */
     }
 
-    .card.aberto .card-conteudo {
+    .card.aberto .card-conteudo { /* Mostra o conteúdo quando aberto */
       display: block;
     }
 
     .fechar-card {
-      position: absolute;
-      top: 6px;
-      right: 10px;
-      cursor: pointer;
+      position: absolute; /* Posiciona no card */
+      top: 6px; /* Distância do topo */
+      right: 10px; /* Distância da direita */
+      cursor: pointer; /* Cursor clicável */
+      font-weight: bold; /* Negrito */
     }
 
     .artes {
-      display: grid;
-      grid-template-columns: repeat(autofill, minmax(120px, 1fr));
+      display: grid; /* Grid de artes */
+      gap: 10px; /* Espaço entre artes */
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); /* Colunas automáticas */
     }
 
     .arte {
-      height: 120px;
-      background: #ccc;
-      position: relative;
-      cursor: pointer;
+      height: 120px; /* Altura padrão */  
+      background: #ccc; /* Fundo neutro */
+      position: relative; /* Base para o botão fechar */
+      overflow: hidden; /* Esconde excesso */
+      cursor: pointer;  /* Indica clique */
     }
 
       .arte img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
+        width: 100%; /* Imagem ocupa toda a largura */
+        height: 100%; /* Imagem ocupa toda a altura */
+        object-fit: cover; /* Mantém proporção */ 
       }
 
       .arte.expandida {
-        grid-column: 1 / -1;
-        height: 360px;
+        grid-column: 1 / -1; /* Ocupa todas as colunas */ 
+        height: 360px; /* Fica maior */
       }
 
       .fechar-arte {
-        position: absolute;
-        top: 6px;
-        right: 6px;
-        background: rgba(0,0,0,0.5);
-        color: #fff;
-        padding: 4px 7px;
-        border-radius: 50%;
-        display: none;
+        position: absolute; /* Posiciona sobre a imagem */    
+        top: 6px; /* Distância do topo */
+        right: 6px; /* Distância da direita */
+        background: rgba(0,0,0,0.5); /* Fundo escuro */ 
+        color: #fff; /*  Texto branco */
+        cursor: pointer; /* Indica clique */
+        padding: 4px 7px; /* Espaçamento interno */
+        border-radius: 50%; /* Formato circular */  
+        display: none; /* Começa oculto */
       }
 
-      .arte.expandida .fechar-arte {
+      .arte.expandida .fechar-arte { /* Mostra ao expandir */
         display: block;
       }
 
       .adicionar {
-        margin-top: 10px;
-        width: 100%;
-        border: 1px dashed rgba(0,0,0,0.3);
-        background: none;
-        padding: 8px;
-        cursor: pointer;
+        margin-top: 10px; /* Espaço acima */
+        width: 100%; /* Ocupa toda a largura */
+        border: 1px dashed rgba(0,0,0,0.3); /* Borda tracejada */
+        background: none; /* Sem fundo */
+        padding: 8px; /* Espaçamento interno */
+        cursor: pointer; /* Cursor clicável */
       }
     @media (max-width: 980px) { /* Responsivo tablet */
       .paper{ grid-column: span 6; }
@@ -300,7 +306,7 @@
             <span class="tag">grafite</span>
           </div>
 
-          <div class="card interativo">
+          <div class="card">
             <div class="fechar-card">X</div>
 
             <div class="card-capa">Estudo de figura</div>
@@ -320,7 +326,7 @@
             <span class="tag">estudo</span>
           </div>
 
-          <div class="card interativo">
+          <div class="card">
             <div class="fechar-card">X</div>
 
             <div class="card-capa">Rosto / perfil</div>
@@ -340,7 +346,7 @@
             <span class="tag">sombras</span>
           </div>
 
-          <div class="card interativo">
+          <div class="card">
             <div class="fechar-card">X</div>
 
             <div class="card-capa">Detalhe: olhos</div>
@@ -360,7 +366,7 @@
             <span class="tag">linha</span>
           </div>
 
-          <div class="card interativo">
+          <div class="card">
             <div class="fechar-card">X</div>
 
             <div class="card-capa">Arquitetura / cénarios</div>
@@ -380,7 +386,7 @@
             <span class="tag">gestual</span>
           </div>
 
-          <div class="card interativo">
+          <div class="card">
             <div class="fechar-card">X</div>
 
             <div class="card-capa">Figura em movimento</div>
@@ -400,7 +406,7 @@
             <span class="tag">valores</span>
           </div>
 
-          <div class="card interativo">
+          <div class="card">
             <div class="fechar-card">X</div>
 
             <div class="card-capa">Paisagem</div>
@@ -409,7 +415,7 @@
               <div class="artes"></div>
               <button class="adicionar">+ adicionar arte</button>
             </div>
-            </div>
+          </div>
         </article>
     </div>
   </body>
@@ -417,20 +423,52 @@
   <script>
     "use strict";
 
-    document.querySelector(".card").addEventListener("click", e => {
-      if (e.target.classList.contains("fechar-card")) {
-        e.currentTarget.classList.remove("aberto");
-        return;
-      }
-      e.currentTarget.classList.toggle("aberto");
+    document.querySelectorAll(".card").forEach(card => { // Percorre todos os cards existentes
+      card.addEventListener("click", e => { //  Escuta clique em cada card individualmente
+
+        if (e.target.classList.contains("fechar-card")) { // Verifica se o clique foi no botão X
+          card.classList.remove("aberto"); // Fecha o card removendo a classe
+          return; // Interrompe para não abrir novamente
+        }
+        if (!e.target.closest(".card-capa")) { // Verifica se o clique não foi no título do card
+          return; // Sai da função para evitar abrir o card
+        }
+        card.classList.toggle("aberto"); // Alterna entre abrir e fechar o card
+      });
     });
 
-    document.querySelectorA(".adicionar").addEventListener("click", e => {
-      e.stopPropagation();
-      const artes = document.querySelector(".artes");
+      document.querySelectorAll(".adicionar").forEach(botao => { // Percorre todos os botões "+ adicionar arte"
+        botao.addEventListener("click", e => { // Escuta clique no botão de adicionar arte
+          e.stopPropagation(); // Impede que o clique abra/feche o card 
+          const card = e.target.closest(".card"); // Encontra o card pai do botão clicado
+          const artes = card.querySelector(".artes"); // Encontra o container .artes dentro do card
+          const arte = document.createElement("div"); // Cria um novo elemento div para a arte
+          
+          arte.className = "arte"; // Define a classe .arte para o novo elemento
+          
+          arte.innerHTML = `
+          <span class="fechar-arte">X</span>
+          <img src="https://via.placeholder.com/600x800">
+          `; // Insere o HTML interno, botão de fechar e imagem
 
-      const arte = documento.creatElement("div");
-      
-    });
+          artes.appendChild(arte); // Adiciona a nova arte dentro do container .artes
+        }); 
+      });
+
+      document.addEventListener("click", e => { // Escuta qualquer clique na página inteira
+        const arte = e.target.closest(".arte"); // Verifica se o clique aconteceu dentro de um elemento com classe .arte, closest sobe na hierarquia do DOM até encontrar .arte
+        if (!arte) return; // Se o clique não foi em nenhuma arte, sai da função  
+        if (e.target.classList.contains("fechar-arte")) { // Verifica se o clique foi no botão X
+          arte.classList.remove("expandida"); // Remove a classe que deixa a arte expandida
+          return; // Interrompe para não expandir novamente
+        }
+
+        document.querySelectorAll(".arte").forEach(a => {
+          a.classList.remove("expandida"); // Fecha todas as artes antes de abrir uma nova, garante que só uma fique expandida por vez
+        });
+          
+        arte.classList.add("expandida"); // Adiciona a classe expandida apenas na arte clicada
+        
+      });
   </script>
 </html>
