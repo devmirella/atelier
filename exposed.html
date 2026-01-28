@@ -16,9 +16,9 @@
 
       --paper: #f3f0ea; /* Cor do papel */
       --paper-2: #ede7dd; /* Segunda cor do papel (gradiente) */
-      --ink: #1a1a1a; /* Cor da "tinta" do papel */
+      --ink: #000000; /* Cor da "tinta" do papel */
       
-      --tape: rgba(220, 210, 185, 0.75); /* Cor da fita adesiva */
+      --tape: rgba(255,255,255,0.25); /* Cor da fita adesiva */
       --tape-edge: rgba(120, 105, 80, 0.25); /* Borda da fita */
 
       --shadow: 0 18px 40px rgba(0,0,0,0.35); /* Sombra forte */
@@ -30,17 +30,17 @@
     }
     
     body {
-      min-height: 100vh; /* Altura mínima igual à tela */
-      font-family: Arial, Helvetica, sans-serif; /* Fonte padrão */
-      color: var(--text); /* Cor do texto */
+      min-height: 100vh; 
+      font-family: Arial, Helvetica, sans-serif; 
+      color: var(--text); 
 
-      background-image: url("fundo-artistico.png"); /* Imagem de fundo */
-      background-size: cover; /* Faz a imagem cobrir toda a tela */
+      background-image: url("fundo.png"); 
+      background-size: center; 
     }
 
     body::before { /* Camada escura sobre o fundo */
       content: ""; /* Necessário para  o pseudo-elemento existir */
-      position: fixed; /* Fica fixa na tela */
+      position: fixed;
       inset: 0; /* Ocupa toda a tela */
       background: rgba(20, 15, 10, 0.75); /* Escurece o fundo */
       z-index: -1; /* Fica atrás do conteúdo */
@@ -53,20 +53,20 @@
     }
 
     .top { /* Área superior */
-      display: flex; /* Layout flexível*/
+      display: flex; 
       align-items: center; /* Alinha verticalmente */
-      justify-content: space-between; /* Espaça os elementos */
+      justify-content: space-between; 
       gap: 16px; /* Espaço entre eles */
       margin-bottom: 18px; /* Espaço inferior */
     }
 
     .voltar { /* Botão voltar */
-      border: 1px solid rgba(255,255,255,0.20); /* Borda sutil */
-      background: rgba(255,255,255,0.06); /* Fundo translúcido */
-      color: var(--text); /* Cor do texto */
-      padding: 10px 14px; /* Tamanho interno */
-      border-radius: 12px; /* Cantos arrendondados */
-      cursor: pointer; /* Cursor clique */
+      border: 1px solid rgba(255,255,255,0.20); 
+      background: rgba(255,255,255,0.06); 
+      color: var(--text); 
+      padding: 10px 14px; 
+      border-radius: 12px; 
+      cursor: pointer; 
       transition: 0.2s ease; /* Animação suave */
     }
 
@@ -75,95 +75,120 @@
     }
 
     .titulo { /* Área do titulo */
-      text-align: center; /* Centralizar texto */
+      text-align: center; 
       flex: 1; /* Ocupa epaço disponovel */
       font-family: "Cormorant Garamond", serif; /* Fonte artística */
     }
 
     .titulo h1 { /* Título principal */
-      font-size: 46px; /* Tamanho da fonte */
+      font-size: 46px; 
       font-weight: 600; /* Peso da fonte */
       letter-spacing: 0.5px; /* Espaçamento entre letras */
     }
 
     .titulo p { /* Subtitulo */
-      margin-top: 4px; /* Espaço de cima */
+      margin-top: 4px; 
       font-size: 14px; /* Tamanho menor */
       opacity: 0.75; /* Tranparência */
-      letter-spacing: 1px; /* Espaçamento entre letras */
+      letter-spacing: 1px; 
       text-transform: lowercase; /* Texto em minúsculas */
     }
 
     .linha { /* Linha divisória */
       height: 1px; /* Altura fina */
-      background: rgba(255,255,255,0.12); /* Cor da linha */
+      background: rgba(255,255,255,0.12); 
       margin: 18px 0 26px; /* Espaçamento vertical */
     }
 
     .grid { /* Grade de papéis */
-      display: grid; /* Ativa grid layout */
-      grid-template-columns: repeat(12, 1fr); /* 12 colunas */
-      gap: 18px; /* Espaço entre itens */
+      display: grid; 
+      grid-template-columns: repeat(12, 1fr); 
+      gap: 18px; 
     }
 
     .paper { /* Card de papel */
-      grid-column: span 4; /* Ocupa 4 colunas */
-      position: relative; /* Base para elementos internos */
-      background: linear-gradient(180deg, var(--paper), var(--paper-2)); /* Gradiente do papel */
-      border-radius: 14px; /* Cantos arrendondados */
-      box-shadow: var(--shadow); /* Sombta */
+      grid-column: span 3; 
+      position: relative; 
+      background: rgba(255,255,255,0.08);
+      backdrop-filter: blur(3px); 
+      -webkit-backdrop-filter: blur(3px);
+
+      border-radius: 14px; 
+      box-shadow: var(--soft); 
       overflow: hidden; /* Esconde excesso */
-      padding: 14px; /* Espaçamento interno */
+      padding: 12px; 
       color: var(--ink); /* Cor do texto */
+
       transform: rotate(var(--rot, 0deg)); /* Rotação leve */
       transition: transform 0.2s ease, box-shadow 0.2s ease; /* Animações */
     }
 
     .paper:hover { /* Houver do card */
       transform: rotate(var(--rot, 0deg)) translateY(-4px); /* Levanta o card */
-      box-shadow: 0 24px 55px rgba(0,0,0,0.45); /* Sombra mais forte */
+      box-shadow: 0 24px 55px rgba(0,0,0,0.45); 
     }
 
     .paper::before { /* Fita adesiva */
       content: ""; /* Cria um elemento */
       position: absolute; 
-      top: 10px; /* Distância do topo */
-      left: 50%; /* Centraliza horizontalmente */
+      top: 10px; 
+      left: 50%; 
       transform: translateX(-50%) rotate(-2deg); /*Ajuste fino */
-      width: 86px; /* Largura da fita */
-      height: 26px; /* Altura da fita */
-      background: var(--tape); /* Cor da fita */
-      border: 1px solid var(--tape-edge); /* Borda */
-      border-radius: 6px; /* Cantos */
-      box-shadow: var(--soft); /* Sombra suave */
-      opacity: 0.95; /* Transparência */
+      width: 86px;
+      height: 26px; 
+      background: var(--tape); 
+      border: 1px solid var(--tape-edge); 
+      border-radius: 6px; 
+      box-shadow: var(--soft);
+      opacity: 0.95; 
+      z-index: 3;
+      pointer-events: none;
     }
 
+    /* Conteúdo do paper */
+    .sketch,
+    .cap,
+    .card {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Texto e botões do card */
+    .card-capa,
+    .card-conteudo,
+    .fechar-card {
+      position: relative;
+      z-index: 2;
+    }
+
+
     .sketch { /* Imagem do esboço */
-      width: 100%; /* Ocupa toda a largura */
-      aspect-ratio: 4 / 5; /* Proporção fixa */
+      width: 100%; 
+      aspect-ratio: 4 / 5; 
       object-fit: cover; /* Ajusta sem distorcer */
-      border-radius: 10px; /* Cantos arredondados */
-      box-shadow: inset 0 0 0 1px rgba(0,0,0,0.10); /* Borda interna */
-      background: rgba(0,0,0,0.04); /* Fundo neutro */
+      border-radius: 10px; 
+
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,0.08);
+      background: rgba(0,0,0,0.02); /* Fundo neutro */
+
       display: block; /* Remove os espaços indesejados */
     }
 
     .cap { /* Legenda */
-      margin-top: 10px; /* Espaço acima */
-      display: flex; /* Layout flex */
+      margin-top: 10px; 
+      display: flex; 
       justify-content: space-between; /* Espaça texto e tag */
       align-items: baseline; /* Alinha pela base */
-      gap: 10px; /* Espaço entre elementos */
-      font-size: 12px; /* Tamanho pequeno */
-      opacity: 0.85; /* Transparência */
+      gap: 10px; 
+      font-size: 12px; 
+      opacity: 0.85;
     }
 
     .tag { /* Tag da legenda */
-      font-size: 11px; /* Texto pequeno */
-      padding: 6px 10px; /* Espaçamento interno */
+      font-size: 11px; 
+      padding: 6px 10px;
       border-radius: 999px; /* Formato pill */
-      background: rgba(0,0,0,0.06); /* Fundo suave */
+      background: rgba(0,0,0,0.06); 
     }
 
     .wide{ grid-column: span 6; } /* Card mais largo */
@@ -177,25 +202,21 @@
     .r5{ --rot: -1.8deg; }
     .r6{ --rot: 0.8deg;}
 
-
-    .card-area { /* Epaço axima dos cards */
-      margin-top: 14px;
-    }
-
     .card {
-      background: linear-gradient(180deg, #f3f0ea); /* Fundo do card */
-      border-radius: 12px; /* Cantos arrendondados */
-      padding: 14px; /* Espaçamento interno */
-      position: relative; /* Base para o botão fechar */
-      cursor: default; /* Cursor padrão */
+      background: rgba(255,255,255,0.08); /* Fundo do card */
+      backdrop-filter: blur(2px);
+      border-radius: 12px;
+      padding: 12px; 
+      position: relative; 
+      cursor: default; 
     }
 
     .card-capa {
-      font-family: "Cormorant Garamond", serif; /* Fonte artística */
-      font-size: 22px;  /* Tamanho do texto */
+      font-family: "Cormorant Garamond", serif; 
+      font-size: 22px;  
       font-weight: 500; /* Peso da fonte */
-      text-align: center; /* Centraliza */
-      cursor: pointer; /* Indica que é clicável */
+      text-align: center; 
+      cursor: pointer; 
     }
 
     .card-conteudo {
@@ -211,22 +232,22 @@
       position: absolute; /* Posiciona no card */
       top: 6px; /* Distância do topo */
       right: 10px; /* Distância da direita */
-      cursor: pointer; /* Cursor clicável */
+      cursor: pointer; 
       font-weight: bold; /* Negrito */
     }
 
     .artes {
       display: grid; /* Grid de artes */
-      gap: 10px; /* Espaço entre artes */
+      gap: 10px; 
       grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); /* Colunas automáticas */
     }
 
     .arte {
-      height: 120px; /* Altura padrão */  
-      background: #ccc; /* Fundo neutro */
-      position: relative; /* Base para o botão fechar */
+      height: 120px; 
+      background: #ccc; 
+      position: relative; 
       overflow: hidden; /* Esconde excesso */
-      cursor: pointer;  /* Indica clique */
+      cursor: pointer;  
     }
 
       .arte img {
@@ -242,12 +263,12 @@
 
       .fechar-arte {
         position: absolute; /* Posiciona sobre a imagem */    
-        top: 6px; /* Distância do topo */
+        top: 6px; 
         right: 6px; /* Distância da direita */
-        background: rgba(0,0,0,0.5); /* Fundo escuro */ 
-        color: #fff; /*  Texto branco */
-        cursor: pointer; /* Indica clique */
-        padding: 4px 7px; /* Espaçamento interno */
+        background: rgba(0,0,0,0.5); 
+        color: #fff; 
+        cursor: pointer; 
+        padding: 4px 7px; 
         border-radius: 50%; /* Formato circular */  
         display: none; /* Começa oculto */
       }
@@ -257,11 +278,11 @@
       }
 
       .adicionar {
-        margin-top: 10px; /* Espaço acima */
-        width: 100%; /* Ocupa toda a largura */
-        border: 1px dashed rgba(0,0,0,0.3); /* Borda tracejada */
+        margin-top: 10px; 
+        width: 100%; 
+        border: 1px dashed rgba(0,0,0,0.3); 
         background: none; /* Sem fundo */
-        padding: 8px; /* Espaçamento interno */
+        padding: 8px; 
         cursor: pointer; /* Cursor clicável */
       }
     @media (max-width: 980px) { /* Responsivo tablet */
@@ -298,7 +319,7 @@
       <section class="grid"> <!-- Grade dos esboços -->
 
         <article class="paper r1">
-          <img class="sketch" src="esboco-01.jpg">
+          <img class="sketch" src="esboco-01.jpg" alt="Esboço 01">
           
 
           <div class="cap">

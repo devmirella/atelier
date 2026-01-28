@@ -95,10 +95,10 @@
             }
 
             .paper { /* Card principal */
-                background: rgba(243,240,234,0.70);
+                background: rgba(255,255,255,0.08);
                 backdrop-filter: blur(2px);
-                -webkit-backdroup-filter: blur(2px);
-                border: 1px solid rgba(255,255,255,0.35);
+                -webkit-backdrop-filter: blur(6px);
+                border: 1px solid rgba(255,255,255,0.18);
                 box-shadow: 0 12px 30px rgba(0,0,0,0.28);
                 padding: 14px;
                 color: var(--ink);
@@ -111,16 +111,28 @@
                 object-fit: cover;
                 border-radius: 12px;
                 display: block; /* Remove espaço extras */
+                cursor: pointer;
 
             }
 
-            .cap { /* Linha aabaixo da imagem */
-                margin-top: 10px;
-                display: flex;
-                justify-content: space-between;
-                font-size: 12px;
-                opacity: 2.5;
+            .lightbox { /* Imagem ampliada */
+                position: fixed;
+                inset: 0;
+                background: rgba(20,15,10,0.85);
+                display: none; /* Oculta por padrão */
+                align-items: center;
+                justify-content: center;
+                z-index: 999;
             }
+
+            .lightbox img {
+                max-width: 90vw;
+                max-height: 90vh;
+                border-radius: 12px;
+                box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+            }
+
+
         </style>
     </head>
     <body>  
@@ -141,39 +153,41 @@
             <section class="grid"> <!-- Grid de cards -->
             
                 <article class="paper"> <!--Card -->
-                    <img class="inspo-img" src="inspo-01.jpg" alt="Platão"> <!-- imagem-->
-
-                    <div class="cap"> <!-- Auto + tag -->
-                        <span>Platão</span>
-                        <span class="tag">filosofia</span>
-                    </div>
-
-                    <div class="card"> <!-- Card interno -->
-                        <div class="fechar-card">X</div> <!-- Botão de fechar   -->
-                        <div class="card-cap">ver citação</div>
-
-                        <div class="card-conteudo"> <!-- Conteúdo oculto -->
-                            <p>"O corpo humano é a prisão da alma."</p>
-                            <div class="autor">Platão</div>
-                        </div>
-                    </div>
+                    <img class="inspo-img" src="inspo-01.jpg" alt=""> <!-- imagem-->
                 </article>
+
+                <article class="paper"> <!-- Auto + tag -->
+                    <img class="inspo-img" src="inspo-03.jpg" alt=""> <!-- imagem-->
+                </article>
+                
+                <article class="paper">
+                    <img class="inspo-img" src="inspo-04.jpg" alt="">
+                </article>
+
             </section>
         </div>
 
-        <script> 
-            document.querySelectorAll(".card").forEach(card => {
-                card.addEventListener("click", e => {
-                    if(e.target.classList.contains("fechar-card")) { // Se clicou no X
-                        card.classList.remove("aberto"); // Fecha o card
-                        return; // Interrompe a função
-                    }
+        <div class="lightbox" id="lightbox">
+            <img src="" alt="">
+        </div>
 
-                    if(!e.target.closest(".card-cap")) return; // Ignora cliques fora do título    
-                    
-                    card.classList.toggle("aberto"); // Abre ou fecha o card
-                });
+        <script> 
+          const imagens = document.querySelectorAll(".inspo-img"); /* Seleciona todas as imagens de inspiração */
+          const lightbox = document.getElementById("lightbox"); /* Seleciona o container lightbox */
+          const lightboxImg = lightbox.querySelector("img"); /* Seleciona a imagem dentro do lightbox */
+
+          imagens.forEach(img => { 
+            img.addEventListener("click", () => {
+                lightboxImg.src = img.src; /* Copia a imagem clicada */
+                lightbox.style.display = "flex"; /* Mostra o lightbox */    
             });
+          });
+
+          lightbox.addEventListener("click", () => {
+            lightbox.style.display = "none"; /* Fecha o lightbox */
+
+            lightboxImg.src = ""; /* Limpa a imagem */
+          });
         </script>
     </body>
 </html> 
