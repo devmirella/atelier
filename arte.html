@@ -39,8 +39,11 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 30px 40px;
+            padding: 28px 18px;
+            max-width: 1200px;
+            margin: 0 auto;
         }
+
 
         .topo h1 {
             font-family: 'Cormorant Garamond', serif;
@@ -48,12 +51,20 @@
             letter-spacing: 1px;
         }
 
-        #btn-voltar {
-            background: none;
-            border: 1px solid #c7bfa8;
-            color: #c7bfa8;
+        .voltar {
+            border: 1px solid rgba(255,255,255,0.25);
+            background: rgba(255,225,225,0.08);
+            color: #f2f2f2;
+            padding: 10px 14px;
+            border-radius: 12px;
             cursor: pointer;
+            transition: background 0.2s ease;
         }
+
+        .voltar:hover {
+            background: rgba(255,255,255,0.12);
+        }
+
 
         .galeria {
            display: grid;
@@ -96,7 +107,7 @@
 <body>
     <!-- Cabeçalho -->
     <header class="topo">
-        <button id="btn-voltar">Voltar</button>
+        <button class="voltar" id="btn-voltar">Voltar</button>
         <h1>Minha Arte</h1>
         <label class="favoritos-toggle">
             <input type="checkbox" id="filtro-favoritos">
@@ -179,6 +190,4 @@
         });
      </script>
 </body>
-
-
 </html>

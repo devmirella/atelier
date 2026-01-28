@@ -143,6 +143,7 @@
       opacity: 0.95; 
       z-index: 3;
       pointer-events: none;
+    
     }
 
     /* Conteúdo do paper */
@@ -173,6 +174,14 @@
 
       display: block; /* Remove os espaços indesejados */
     }
+    .sketch {
+      display: none;
+    }
+
+    .sketch[src] {
+      display: block;
+    }
+
 
     .cap { /* Legenda */
       margin-top: 10px; 
@@ -301,7 +310,7 @@
 </head>
 
   <body>
-    
+
     <div class="wrap"> <!-- Container Central -->
 
       <div class="top"> <!-- Cabeçalho --> 
@@ -320,7 +329,7 @@
       <section class="grid"> <!-- Grade dos esboços -->
 
         <article class="paper r1">
-          <img class="sketch" src="esboco-01.jpg" alt="Esboço 01">
+          <img class="sketch" src="esboco-01.jpg">
           
 
           <div class="cap">
@@ -341,7 +350,7 @@
         </article>
 
         <article class="paper r2">
-          <img class="sketch" src="esboco-02.jpg" alt="Esboço 02">
+          <img class="sketch" src="esboco-02.jpg">
 
           <div class="cap">
             <span>Rosto / perfil</span>
@@ -361,7 +370,7 @@
         </article>
 
         <article class="paper r3">
-          <img class="sketch" src="esboco-03.jpg" alt="Esboço 03">
+          <img class="sketch" src="esboco-03.jpg">
 
           <div class="cap">
             <span>Detalhe: olhos</span>
@@ -381,7 +390,7 @@
         </article>
 
         <article class="paper wide r4">
-          <img class="sketch" src="esboco-04.jpg" alt="Esboço 04">
+          <img class="sketch" src="esboco-04.jpg">
 
           <div class="cap">
             <span>Arquitetura / cenário</span>
@@ -401,7 +410,7 @@
         </article>
 
         <article class="paper r5 tall">
-          <img class="sketch" src="esboco-05.jpg" alt="Esboço 05">
+          <img class="sketch" src="esboco-05.jpg">
 
           <div class="cap">
             <span>Figura em movimento</span>
@@ -421,7 +430,7 @@
         </article>
 
         <article class="paper r6">
-          <img class="sketch" src="esboco-06.jpg" alt="Esboço 06">
+          <img class="sketch" src="esboco-06.jpg">
 
           <div class="cap">
             <span>Paisagem</span>
