@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+    <head>
+        <meta charset="UTF-8"> <!-- UTF-8 para suportar caracteres especiais -->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Responsivo -->
+        <title>Atelier | Inspirações</title>
+        <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&display=swap" rel="stylesheet"> 
+        <style>
+
+            :root { 
+                --text: #f2f2f2; /* Cor do texto clara */
+                --ink: #1a1a1a; /* Cor do texto escura */
+            }
+
+            /* Reset básico */
+            *{
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            /* Corpo da página */
+            body {
+                min-height: 100vh;
+                font-family: Arial, Helvetica, sans-serif;
+                color: var(--text);
+
+                /* Fundo artístico */
+                background-image: url("fundo.png");
+                background-size: center;
+                background-position: center;
+                background-attachment: fixed;
+            }
+
+            /* Camada escura */
+            body::before {
+                content: "";
+                position: fixed;
+                inset: 0;
+                background: rgba(20, 15, 10, 0.75); /* Escurece e aquece o fundo */
+                z-index: -1;
+            }
+
+            .wrap { /* Container central do conteúdo */
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 28px 18px 40px;
+            }
+
+            .top { /* Área do cabeçalho */
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-bottom: 18px
+            }
+
+            .voltar { /* Botão voltar */
+                border: 1px solid rgba(255,255,255,0.25);
+                background: rgba(255,225,225,0.08);
+                color: var(--text);
+                padding: 10px 14px;
+                border-radius: 12px;
+                cursor: pointer;
+            }
+
+            .titulo { /* Área do título */
+                text-align: center;
+                flex: 1;
+                font-family: "comorant garamond", serif;
+            }
+
+            .titulo h1 {
+               font-size: 44px;
+               font-weight: 600;
+            }
+
+            .titulo p { /* subtítulo */
+                margin-top: 4px;
+                font-size: 14px;
+                opacity: 0.75; /* Transparência */
+                letter-spacing: 1px;
+                text-transform: lowercase; /* Texto em minúsculas */
+            }
+
+            .linha { /* Linha divisória */
+                height: 1px;
+                background: rgba(255,225,225,0.18);
+                margin: 18px 0 26px;
+            }
+
+            .grid { /* Grade dos cards */
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); /* Colunas automáticas */
+                gap: 18px; /* Espaço entre cards */
+            }
+
+            .paper { /* Card principal */
+                background: rgba(255,255,255,0.08);
+                backdrop-filter: blur(2px);
+                -webkit-backdrop-filter: blur(6px);
+                border: 1px solid rgba(255,255,255,0.18);
+                box-shadow: 0 12px 30px rgba(0,0,0,0.28);
+                padding: 14px;
+                color: var(--ink);
+                border-radius: 16px; 
+            }
+
+            .inspo-img { /* Imagem de inspiração */
+                width: 100%;
+                aspect-ratio: 4 / 5;
+                object-fit: cover;
+                border-radius: 12px;
+                display: block; /* Remove espaço extras */
+                cursor: pointer;
+
+            }
+
+            .lightbox { /* Imagem ampliada */
+                position: fixed;
+                inset: 0;
+                background: rgba(20,15,10,0.85);
+                display: none; /* Oculta por padrão */
+                align-items: center;
+                justify-content: center;
+                z-index: 999;
+            }
+
+            .lightbox img {
+                max-width: 90vw;
+                max-height: 90vh;
+                border-radius: 12px;
+                box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+            }
+
+
+        </style>
+    </head>
+    <body>  
+        
+        <div class="wrap"> 
+
+            <div class="top">
+                <button class="voltar" onclick="history.back()">Voltar</button>
+                <div class="titulo">
+                    <h1>Inspirações</h1>
+                    <p>imagens e pensamentos</p>
+                </div>
+                <div style="width:110px"></div> <!-- Espaçador visual -->
+            </div>
+        
+
+            <div class="linha"></div> <!-- Linha divisória -->  
+
+            <section class="grid"> <!-- Grid de cards -->
+            
+                <article class="paper"> <!--Card -->
+                    <img class="inspo-img" src="inspo-01.jpg" alt=""> <!-- imagem-->
+                </article>
+
+                <article class="paper"> <!-- Auto + tag -->
+                    <img class="inspo-img" src="inspo-03.jpg" alt=""> <!-- imagem-->
+                </article>
+                
+                <article class="paper">
+                    <img class="inspo-img" src="inspo-04.jpg" alt="">
+                </article>
+
+            </section>
+        </div>
+
+        <div class="lightbox" id="lightbox">
+            <img src="" alt="">
+        </div>
+
+        <script> 
+          const imagens = document.querySelectorAll(".inspo-img"); /* Seleciona todas as imagens de inspiração */
+          const lightbox = document.getElementById("lightbox"); /* Seleciona o container lightbox */
+          const lightboxImg = lightbox.querySelector("img"); /* Seleciona a imagem dentro do lightbox */
+
+          imagens.forEach(img => { 
+            img.addEventListener("click", () => {
+                lightboxImg.src = img.src; /* Copia a imagem clicada */
+                lightbox.style.display = "flex"; /* Mostra o lightbox */    
+            });
+          });
+
+          lightbox.addEventListener("click", () => {
+            lightbox.style.display = "none"; /* Fecha o lightbox */
+
+            lightboxImg.src = ""; /* Limpa a imagem */
+          });
+        </script>
+    </body>
+</html> 
