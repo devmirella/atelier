@@ -22,5 +22,6 @@ def exposed():
 def inspiracoes():
     return render_template("inspiracoes.html")
 
+
 if __name__ == "__main__":
     app.run(debug=True)
