@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atelier | Home</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/home.css">
+</head>
+<body>
+
+<main>
+
+    <div class="topo">
+        <h1>Atelier</h1>
+
+        <div class="linha"></div>
+
+        <p class="frase">O seu refúgio criativo</p>
+    </div>
+
+    <div class="rodape">
+        <div class="botoes">
+            <button id="btn-arte">Minha Arte</button>
+            <button id="btn-palavras">Exposed</button>
+            <button id="btn-inspiracao">Inspiração</button>
+            <button id="btn-sair">Sair</button>
+        </div>
+    </div>
+
+</main>
+
+<script>
+"use strict";
+
+
+/* Proteção de acesso */
+if (localStorage.getItem("atelier_logado") !== "true") {
+    window.location.href = "/";
+}
+
+/* Navgegação entre páginas */
+document.querySelector("#btn-arte").addEventListener("click", function () {
+    window.location.href = "/arte";
+});
+
+document.querySelector("#btn-palavras").addEventListener("click", function () {
+    window.location.href = "/exposed";
+});
+
+document.querySelector("#btn-inspiracao").addEventListener("click", function () {
+    window.location.href = "/inspiracoes";
+});
+
+/* Sair */
+document.querySelector("#btn-sair").addEventListener("click", function () {
+    localStorage.removeItem("atelier_logado");
+    window.location.href = "/";
+});
+</script>
+</body>
+</html>

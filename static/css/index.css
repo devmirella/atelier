@@ -1,0 +1,136 @@
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Corpo da página */
+body {
+    background-image: url("/static/images/arte-atelier.png");
+    background-size: cover; 
+    background-position: center;
+    min-height: 100vh;
+
+    display: flex; /* centraliza o formulário */
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+
+    position: relative;
+    color: #fff;
+}
+
+/* Escurecimento geral para leitura */
+body::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+        circle at center,
+        rgba(20,20,20,0.35),
+        rgba(10,10,10,0.65)
+    );
+    backdrop-filter: blur(6px) saturate(0.85);
+
+    z-index: -1;
+}
+
+/* Container agora é só o login */
+.container {
+    width: 90%;
+    max-width: 420px;
+
+    padding: 40px;
+    
+    background: rgba(20, 20, 20, 0.25);
+    backdrop-filter: blur(1.5px);
+    border-radius: 16px;
+    box-shadow: 0 0 40px rgba(0,0,0,0.35);
+
+
+    position: relative;
+    z-index: 1;
+}
+
+/* Título */
+.formulario h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 42px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+/* Subtítulo */
+.subtitulo {
+    font-size: 15px;
+    opacity: 0.75;
+    margin-bottom: 30px;
+}
+
+/* Formulário */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+/* Campos */
+input {
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255,255,255,0.12);
+    padding: 14px 18px;
+    border-radius: 50px;
+    color: #fff;
+    
+}
+
+/* Placeholder */
+input::placeholder {
+    color: rgba(255,255,255,0.45);
+}
+
+/* Botão principal */
+button[type="submit"] {
+    margin-top: 10px;
+    padding: 14px;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 50px;
+    color: #fff;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+/* Hover */
+button[type="submit"]:hover {
+    background: rgba(255,255,255,0.22);
+}
+
+/* Botão cadastro */
+#btn-cadastro {
+    background: transparent;
+    border: none;
+    color: rgba(255,255,255,0.6);
+    font-size: 14px;
+    cursor: pointer;
+}
+
+/* Mensagem */
+#mensagem {
+    min-height: 20px;
+    font-size: 14px;
+}
+
+/* Esqueceu senha */
+#esqueceu-senha {
+    margin-top: 14px;
+    font-size: 13px;
+    color: rgba(255,255,255,0.5);
+    text-decoration: none;
+}
+
+#esqueceu-senha:hover {
+    color: #fff;
+}

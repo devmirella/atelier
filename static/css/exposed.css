@@ -1,0 +1,295 @@
+/* Variáveis globais */
+:root {
+  --bg-1: #0f0f10;
+  --bg-2: #171719;
+  --text: #f2f2f2;
+
+  --paper: #f3f0ea;
+  --paper-2: #ede7dd;
+  --ink: #000000;
+
+  --tape: rgba(255, 255, 255, 0.25);
+  --tape-edge: rgba(120, 105, 80, 0.25);
+
+  --shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+  --soft: 0 10px 25px rgba(0, 0, 0, 0.22);
+}
+
+/* Reset basico */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Body / Fundo */
+body {
+  min-height: 100vh;
+  font-family: Arial, Helvetica, sans-serif;
+  color: var(--text);
+
+  background-image: url("/static/images/fundo.png");
+  background-size: cover;
+  background-position: center;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: rgba(20, 15, 10, 0.75);
+  z-index: -1;
+}
+
+/* CONTAINER CENTRAL */
+.wrap {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 28px 18px 40px;
+}
+
+/* Topo cabeçalho */
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.voltar {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text);
+  padding: 10px 14px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.voltar:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.titulo {
+  text-align: center;
+  flex: 1;
+  font-family: "Cormorant Garamond", serif;
+}
+
+.titulo h1 {
+  font-size: 46px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.titulo p {
+  margin-top: 4px;
+  font-size: 14px;
+  opacity: 0.75;
+  letter-spacing: 1px;
+  text-transform: lowercase;
+}
+
+/* Linha divisória */
+.linha {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.12);
+  margin: 18px 0 26px;
+}
+
+/* Grid de papers */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 18px;
+}
+
+/* Card paper */
+.paper {
+  grid-column: span 3;
+  position: relative;
+
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+
+  border-radius: 14px;
+  box-shadow: var(--soft);
+  overflow: hidden;
+  padding: 12px;
+
+  color: var(--ink);
+
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+
+}
+
+.paper:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 24px 55px rgba(0, 0, 0, 0.45);
+}
+
+/* fita adesiva */
+.paper::before {
+  content: "";
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%) rotate(-2deg);
+
+  width: 86px;
+  height: 26px;
+
+  background: var(--tape);
+  border: 1px solid var(--tape-edge);
+  border-radius: 6px;
+
+  box-shadow: var(--soft);
+  z-index: 3;
+  pointer-events: none;
+}
+
+/* Imagem do esboço */
+.sketch {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  border-radius: 10px;
+  display: block;
+}
+
+.sketch {
+  display: none;
+}
+
+.sketch[src] {
+  display: block;
+}
+
+/* Legenda */
+.cap {
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 12px;
+  opacity: 0.85;
+}
+
+.tag {
+  font-size: 11px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.06);
+}
+
+/* Variações de tamanho */
+.wide {
+  grid-column: span 6;
+}
+
+.tall .sketch {
+  aspect-ratio: 3 / 4;
+}
+
+.wide .sketch {
+  aspect-ratio: 16 / 10;
+}
+
+/* Card interno */
+.card {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(2px);
+  border-radius: 12px;
+  padding: 12px;
+  position: relative;
+}
+
+.card-capa {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 22px;
+  font-weight: 500;
+  text-align: center;
+  cursor: pointer;
+}
+
+.card-conteudo {
+  display: none;
+  margin-top: 12px;
+}
+
+.card.aberto .card-conteudo {
+  display: block;
+}
+
+.fechar-card {
+  position: absolute;
+  top: 6px;
+  right: 10px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+/* Artes adicionadas */
+.artes {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+}
+
+.arte {
+  height: 120px;
+  background: #ccc;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.arte img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.arte.expandida {
+  grid-column: 1 / -1;
+  height: 360px;
+}
+
+.fechar-arte {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  background: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  cursor: pointer;
+  padding: 4px 7px;
+  border-radius: 50%;
+  display: none;
+}
+
+.arte.expandida .fechar-arte {
+  display: block;
+}
+
+.adicionar {
+  margin-top: 10px;
+  width: 100%;
+  border: 1px dashed rgba(0, 0, 0, 0.3);
+  background: none;
+  padding: 8px;
+  cursor: pointer;
+}
+
+/* Responsivo */
+@media (max-width: 980px) {
+  .paper { grid-column: span 6; }
+  .wide { grid-column: span 12; }
+}
+
+@media (max-width: 620px) {
+  .top { align-items: flex-start; }
+  .titulo h1 { font-size: 38px; }
+  .paper { grid-column: span 12; }
+}

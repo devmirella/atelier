@@ -1,0 +1,131 @@
+/* Variáveis */
+:root {
+  --text: #f2f2f2;
+  --ink: #1a1a1a;
+}
+
+/* Reset  */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Body / Fundo */
+body {
+  min-height: 100vh;
+  font-family: Arial, Helvetica, sans-serif;
+  color: var(--text);
+
+  background-image: url("/static/images/fundo.png");
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: rgba(20, 15, 10, 0.75);
+  z-index: -1;
+}
+
+/* Container 
+.wrap {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 28px 18px 40px;
+}
+
+/* Topo */
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.voltar {
+  border: 1px solid rgba(255,255,255,0.25);
+  background: rgba(255,255,255,0.08);
+  color: var(--text);
+  padding: 10px 14px;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.titulo {
+  text-align: center;
+  flex: 1;
+  font-family: "Cormorant Garamond", serif;
+}
+
+.titulo h1 {
+  font-size: 44px;
+  font-weight: 600;
+}
+
+.titulo p {
+  margin-top: 4px;
+  font-size: 14px;
+  opacity: 0.75;
+  letter-spacing: 1px;
+  text-transform: lowercase;
+}
+
+.espaco {
+  width: 110px;
+}
+
+/* Linha */
+.linha {
+  height: 1px;
+  background: rgba(255,255,255,0.18);
+  margin: 18px 0 26px;
+}
+
+/* Grid */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 18px;
+}
+
+/* Card */
+.paper {
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255,255,255,0.18);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.28);
+  padding: 14px;
+  border-radius: 16px;
+}
+
+/* imagem */
+.inspo-img {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  border-radius: 12px;
+  cursor: pointer;
+  display: block;
+}
+
+/* lightbox */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  background: rgba(20,15,10,0.85);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.lightbox img {
+  max-width: 90vw;
+  max-height: 90vh;
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+}

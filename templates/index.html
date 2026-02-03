@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atelier | Acesso</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/index.css">
+</head>
+<body>
+
+<main class="container">
+
+    <section class="formulario">
+        <h1>Atelier</h1>
+        <p class="subtitulo">Acesso ao atelier</p>
+
+        <form id="form-login">
+            <input id="email" type="email" placeholder="Email">
+            <input id="senha" type="password" placeholder="Senha">
+
+            <p id="mensagem"></p>
+
+            <button type="submit">Entrar</button>
+            <button id="btn-cadastro" type="button">Criar conta</button>
+
+            <a href="#" id="esqueceu-senha">Esqueceu a senha?</a>
+        </form>
+    </section>
+
+</main>
+<script>
+"use strict";
+
+
+/*  SELETORES  */
+const form = document.querySelector("#form-login");
+const inputEmail = document.querySelector("#email");
+const inputSenha = document.querySelector("#senha");
+const mensagem = document.querySelector("#mensagem");
+const btnCadastro = document.querySelector("#btn-cadastro");
+const esqueceuSenha = document.querySelector("#esqueceu-senha");
+
+/*  MENSAGENS */
+function mostrarMensagem(texto, tipo) {
+    mensagem.textContent = texto;
+
+    if (tipo === "erro") {
+        mensagem.style.color = "#ff6b6b";
+        return;
+    }
+
+    if (tipo === "sucesso") {
+        mensagem.style.color = "#17b3a3";
+        return;
+    }
+
+    mensagem.style.color = "#a9a9a9";
+}
+
+/* VALIDAÇÃO */
+function validar(email, senha) {
+    if (email === "" || senha === "") {
+        mostrarMensagem("Preencha todos os campos.", "erro");
+        return false;
+    }
+
+    if (!email.includes("@")) {
+        mostrarMensagem("Digite um email válido.", "erro");
+        return false;
+    }
+
+    if (senha.length < 6) {
+        mostrarMensagem("A senha precisa ter no mínimo 6 caracteres.", "erro");
+        return false;
+    }
+
+    return true;
+}
+
+/* LOGIN */
+form.addEventListener("submit", function (event) {
+    event.preventDefault();
+
+    const emailDigitado = inputEmail.value.trim();
+    const senhaDigitada = inputSenha.value.trim();
+
+    if (!validar(emailDigitado, senhaDigitada)) return;
+
+    const usuarioSalvo = JSON.parse(localStorage.getItem("atelier_usuario"));
+
+    if (!usuarioSalvo) {
+        mostrarMensagem("Nenhum usuário cadastrado.", "erro");
+        return;
+    }
+
+    if (
+        usuarioSalvo.email !== emailDigitado ||
+        usuarioSalvo.senha !== senhaDigitada
+    ) {
+        mostrarMensagem("Email ou senha incorretos.", "erro");
+        return;
+    }
+
+    mostrarMensagem("Login realizado. Bem-vinda ao Atelier.", "sucesso");
+
+    localStorage.setItem("atelier_logado", "true");
+
+    setTimeout(() => {
+        window.location.href = "/home";
+    }, 800);
+
+    inputEmail.value = "";
+    inputSenha.value = "";
+});
+
+/* CADASTRO */
+btnCadastro.addEventListener("click", function () {
+    const emailDigitado = inputEmail.value.trim();
+    const senhaDigitada = inputSenha.value.trim();
+
+    if (!validar(emailDigitado, senhaDigitada)) return;
+
+    const usuario = {
+        email: emailDigitado,
+        senha: senhaDigitada
+    };
+
+    localStorage.setItem("atelier_usuario", JSON.stringify(usuario));
+
+    mostrarMensagem("Cadastro realizado com sucesso.", "sucesso");
+
+    inputEmail.value = "";
+    inputSenha.value = "";
+});
+
+/* RECUPERAÇÃO DE SENHA */
+esqueceuSenha.addEventListener("click", function (event) {
+    event.preventDefault();
+
+    const emailDigitado = inputEmail.value.trim();
+
+    if (emailDigitado === "") {
+        mostrarMensagem("Digite seu email para recuperar a senha.", "erro");
+        return;
+    }
+
+    const usuarioSalvo = JSON.parse(localStorage.getItem("atelier_usuario"));
+
+    if (!usuarioSalvo) {
+        mostrarMensagem("Nenhum usuário cadastrado.", "erro");
+        return;
+    }
+
+    if (usuarioSalvo.email !== emailDigitado) {
+        mostrarMensagem("Email não encontrado.", "erro");
+        return;
+    }
+
+    const novaSenha = prompt("Digite sua nova senha (mínimo 6 caracteres):");
+
+    if (!novaSenha || novaSenha.length < 6) {
+        mostrarMensagem("Senha inválida.", "erro");
+        return;
+    }
+
+    usuarioSalvo.senha = novaSenha;
+    localStorage.setItem("atelier_usuario", JSON.stringify(usuarioSalvo));
+
+    mostrarMensagem("Senha redefinida com sucesso.", "sucesso");
+});
+</script>
+</body>
+</html>

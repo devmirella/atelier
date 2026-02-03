@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Atelier | Inspirações</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/inspiracoes.css">
+</head>
+
+<body>
+
+<script>
+  // Protege a página
+  if (localStorage.getItem("atelier_logado") !== "true") {
+    window.location.href = "/";
+  }
+</script>
+
+<div class="wrap">
+
+  <div class="top">
+    <button class="voltar" onclick="window.location.href='/home'">Voltar</button>
+
+    <div class="titulo">
+      <h1>Inspirações</h1>
+      <p>imagens e pensamentos</p>
+    </div>
+
+    <div class="espaco"></div>
+  </div>
+
+  <div class="linha"></div>
+
+  <section class="grid">
+    <article class="paper">
+      <img class="inspo-img" src="/static/images/inspo-01.jpg" alt="">
+    </article>
+
+    <article class="paper">
+      <img class="inspo-img" src="/static/images/inspo-02.jpg" alt="">
+    </article>
+
+    <article class="paper">
+      <img class="inspo-img" src="/static/images/inspo-03.jpg" alt="">
+    </article>
+  </section>
+
+</div>
+
+<div class="lightbox" id="lightbox">
+  <img src="" alt="">
+</div>
+
+<script>
+  const imagens = document.querySelectorAll(".inspo-img");
+  const lightbox = document.getElementById("lightbox");
+  const lightboxImg = lightbox.querySelector("img");
+
+  imagens.forEach(img => {
+    img.addEventListener("click", () => {
+      lightboxImg.src = img.src;
+      lightbox.style.display = "flex";
+    });
+  });
+
+  lightbox.addEventListener("click", () => {
+    lightbox.style.display = "none";
+    lightboxImg.src = "";
+  });
+</script>
+
+</body>
+</html>

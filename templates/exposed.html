@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Atelier | Exposed</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/exposed.css">
+</head>
+
+<body>
+
+<script>
+  // Protege a página
+  if (localStorage.getItem("atelier_logado") !== "true") {
+    window.location.href = "/";
+  }
+</script>
+
+<div class="wrap">
+
+  <div class="top">
+    <button class="voltar" onclick="window.location.href='/home'">Voltar</button>
+
+    <div class="titulo">
+      <h1>Exposed</h1>
+      <p>esboços de arte</p>
+    </div>
+
+    <div style="width:110px"></div>
+  </div>
+
+  <div class="linha"></div>
+
+  <section class="grid">
+
+    <article class="paper r1">
+      <img class="sketch" src="/static/images/esboco-01.jpg">
+
+      <div class="cap">
+        <span>Estudo de figura</span>
+        <span class="tag">grafite</span>
+      </div>
+
+      <div class="card">
+        <div class="fechar-card">X</div>
+        <div class="card-capa">Estudo de figura</div>
+
+        <div class="card-conteudo">
+          <div class="artes"></div>
+          <button class="adicionar">+ adicionar arte</button>
+        </div>
+      </div>
+    </article>
+
+    <article class="paper r2">
+      <img class="sketch" src="/static/images/esboco-02.jpg">
+      <div class="cap">
+        <span>Rosto / perfil</span>
+        <span class="tag">estudo</span>
+      </div>
+      <div class="card">
+        <div class="fechar-card">X</div>
+        <div class="card-capa">Rosto / perfil</div>
+        <div class="card-conteudo">
+          <div class="artes"></div>
+          <button class="adicionar">+ adicionar arte</button>
+        </div>
+      </div>
+    </article>
+
+    <article class="paper r3">
+      <img class="sketch" src="/static/images/esboco-03.jpg">
+      <div class="cap">
+        <span>Detalhe: olhos</span>
+        <span class="tag">sombras</span>
+      </div>
+      <div class="card">
+        <div class="fechar-card">X</div>
+        <div class="card-capa">Detalhe: olhos</div>
+        <div class="card-conteudo">
+          <div class="artes"></div>
+          <button class="adicionar">+ adicionar arte</button>
+        </div>
+      </div>
+    </article>
+
+  </section>
+</div>
+
+<script>
+  "use strict";
+
+  document.querySelectorAll(".card").forEach(card => {
+    card.addEventListener("click", e => {
+      if (e.target.classList.contains("fechar-card")) {
+        card.classList.remove("aberto");
+        return;
+      }
+      if (!e.target.closest(".card-capa")) return;
+      card.classList.toggle("aberto");
+    });
+  });
+
+  document.querySelectorAll(".adicionar").forEach(botao => {
+    botao.addEventListener("click", e => {
+      e.stopPropagation();
+      const card = e.target.closest(".card");
+      const artes = card.querySelector(".artes");
+
+      const arte = document.createElement("div");
+      arte.className = "arte";
+      arte.innerHTML = `
+        <span class="fechar-arte">X</span>
+        <img src="https://via.placeholder.com/600x800">
+      `;
+
+      artes.appendChild(arte);
+    });
+  });
+
+  document.addEventListener("click", e => {
+    const arte = e.target.closest(".arte");
+    if (!arte) return;
+
+    if (e.target.classList.contains("fechar-arte")) {
+      arte.classList.remove("expandida");
+      return;
+    }
+
+    document.querySelectorAll(".arte").forEach(a =>
+      a.classList.remove("expandida")
+    );
+
+    arte.classList.add("expandida");
+  });
+</script>
+
+</body>
+</html>
