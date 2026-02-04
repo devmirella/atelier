@@ -31,13 +31,6 @@ body::before {
   z-index: -1;
 }
 
-/* Container */
-.wrap {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 28px 18px 40px;
-}
-
 /* Topo */
 .top {
   display: flex;
