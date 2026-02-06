@@ -33,31 +33,28 @@
 
   <div class="linha"></div>
 
-  <section class="grid">
-    <article class="paper">
-      <img class="inspo-img" src="/static/images/inspo-01.jpg" alt="">
-    </article>
-
-    <article class="paper">
-      <img class="inspo-img" src="/static/images/inspo-02.jpg" alt="">
-    </article>
-
-    <article class="paper">
-      <img class="inspo-img" src="/static/images/inspo-03.jpg" alt="">
-    </article>
-  </section>
-
+    <section class="grid">
+      
+      {% for item in inspiracoes %} <!-- Loop JINJA (Flask) para cada item da lista "inspiracao" enviada pelo app.py, cria um card de imagem -->
+        <article class="paper">
+          <img class="inspo-img" src="{{ item.imagem }}" alt=""> <!-- Imagem da inspiracão "item.imagem" vem do dicionário criado no Flask. -->
+        </article>
+      {% endfor %}
+    
+    </section>
+  
 </div>
 
 <div class="lightbox" id="lightbox">
   <img src="" alt="">
 </div>
 
-<script>
-  const imagens = document.querySelectorAll(".inspo-img");
-  const lightbox = document.getElementById("lightbox");
-  const lightboxImg = lightbox.querySelector("img");
+<script> // Script do LIGHTBOX, responsavel por abrir e fechar a imagem em destaque 
+  const imagens = document.querySelectorAll(".inspo-img"); // Seleciona todas as imagens renderizadas 
+  const lightbox = document.getElementById("lightbox"); // Seleciona o lightbox
+  const lightboxImg = lightbox.querySelector("img"); // Seleciona a imagem dentro do lightbox 
 
+  // Adiciona um evento de clique para cada imagem, que ao ser clicada, exibe a imagem no lightbox
   imagens.forEach(img => {
     img.addEventListener("click", () => {
       lightboxImg.src = img.src;
@@ -65,6 +62,7 @@
     });
   });
 
+  // Fecha o lightbox ao clicar fora da imagem
   lightbox.addEventListener("click", () => {
     lightbox.style.display = "none";
     lightboxImg.src = "";

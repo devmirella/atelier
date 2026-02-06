@@ -122,3 +122,9 @@ body::before {
   border-radius: 12px;
   box-shadow: 0 20px 60px rgba(0,0,0,0.6);
 }
+
+.wrap {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 28px 20px;
+}
