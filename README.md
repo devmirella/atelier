@@ -2,39 +2,41 @@
 
 Projeto autoral em desenvolvimento, iniciado no **front-end com HTML, CSS e JavaScript puro** e atualmente em evolução para o **backend com Python e Flask**.
 
-O **Atelier** é um projeto que une **estrutura, lógica e identidade visual**, explorando não apenas layout, mas também **fluxos de navegação**, **controle de acesso**, **organização de código** e **construção gradual de funcionalidades reais**.
+O **Atelier** une **arte, estrutura e lógica**, explorando não apenas layout, mas também **fluxos de navegação**, **persistência de dados**, **organização consciente de código** e a construção gradual de funcionalidades reais.
 
-O foco do projeto está no aprendizado consciente, com decisões técnicas pensadas, evitando soluções prontas e priorizando o entendimento do funcionamento de cada parte.
+Mais do que um produto final, o projeto representa um **processo de aprendizado sólido**, sem atalhos, priorizando entendimento técnico, decisões reversíveis e crescimento sustentável.
 
 ---
+
+## 🧱 Stack do projeto
 
 ### Front-end
 - HTML5  
 - CSS3  
-- JavaScript (Vanilla)  
+- JavaScript (Vanilla)
 
-### Persistência e controle de estado
-- LocalStorage  
+### Persistência (estado atual)
+- LocalStorage (front-end)
+- JSON como fonte de verdade (backend)
 
 ### Back-end
 - Python  
+- Flask
 
 ---
 
-## Estrutura atual do projeto
-
-O projeto conta atualmente com as seguintes páginas e funcionalidades:
+## 🎨 Funcionalidades atuais
 
 ### 🔐 Login e Cadastro
 - Validação básica de email e senha
 - Feedback visual de erro e sucesso
-- Controle de sessão inicial utilizando LocalStorage
+- Controle de sessão inicial com LocalStorage
 - Redirecionamento automático após login
 
 ### 🏠 Home
 - Página central de navegação
-- Acesso protegido (redirecionamento para login quando não autenticado)
-- Navegação para as demais áreas do projeto
+- Acesso protegido (redirecionamento quando não autenticado)
+- Navegação entre as áreas do projeto
 
 ### 🎨 Minha Arte
 - Galeria de artes
@@ -45,64 +47,100 @@ O projeto conta atualmente com as seguintes páginas e funcionalidades:
 ### 🧠 Exposed
 - Área dedicada a esboços e processos criativos
 - Cards interativos
-- Expansão de conteúdos
+- Expansão de conteúdo
 - Adição dinâmica de artes dentro dos cards
 
 ### 🌿 Inspirações
 - Galeria de referências visuais
 - Lightbox para visualização ampliada
-- Página em evolução contínua, voltada a imagens, pensamentos e referências artísticas
+- Conteúdo servido dinamicamente pelo backend
+- Dados armazenados e persistidos em arquivo JSON
 
 ---
 
-## Identidade visual
+## 🔁 Backend – estado atual
 
-O projeto trabalha com uma estética **minimalista e atmosférica**, priorizando:
+O backend do Atelier foi iniciado e estruturado de forma consciente, utilizando Flask como base.
 
-- fundos com sensação de memória e profundidade
-- contraste suave e leitura confortável
-- tipografia serifada para identidade artística
-- interfaces discretas que não competem com o conteúdo
+Atualmente, o backend possui:
 
-A interface busca **silêncio visual**, coerência entre páginas e fluidez de navegação.
+- Projeto Flask funcional
+- Estrutura organizada (`templates/`, `static/`, `data/`)
+- Rotas definidas para todas as páginas
+- Integração com o front-end sem quebra de layout
+- Leitura de dados a partir de `inspiracoes.json`
+- Escrita de novos dados no JSON via rota POST
+- Persistência garantida entre reinicializações do servidor
 
----
-
-## Backend (estado atual)
-
-O backend foi iniciado utilizando **Python e Flask**, com:
-
-- servidor Flask básico
-- rotas definidas para todas as páginas do projeto
-- uso de `render_template` para servir os arquivos HTML
-- integração inicial entre front-end e backend sem quebra de layout
-
-Neste estágio, o Flask atua como base estrutural para a evolução da aplicação.
+O arquivo JSON atua como **fonte de verdade inicial**, permitindo evolução futura sem retrabalho.
 
 ---
 
-## Status do projeto
+## 💾 Persistência de dados
 
-🚧 **Projeto em desenvolvimento ativo**
-
-- O front-end encontra-se estruturado, funcional e com identidade visual definida  
-- O backend foi iniciado e está preparado para evoluir  
-- O projeto está em fase de transição de uma aplicação puramente front-end para uma aplicação full stack
-
----
-
-## Próximos passos planejados
-
-- Organizar definitivamente a estrutura de pastas (`templates` e `static`)
-- Centralizar regras de autenticação no backend
-- Substituir gradualmente o uso de LocalStorage por autenticação real no Flask
-- Implementar proteção de rotas no backend
-- Evoluir funcionalidades existentes mantendo a identidade visual
-- Refinar responsividade e acessibilidade
+- Pasta `data/` dedicada exclusivamente a dados
+- Arquivo `inspiracoes.json` válido e nunca vazio
+- Backend responsável por leitura e escrita
+- Dados preservados após desligar e ligar o servidor Flask
 
 ---
 
-## Observação
+## 🎨 Artes autorais
 
-Este projeto faz parte de um processo de aprendizado contínuo.  
-Mais do que o resultado final, o foco está no **processo**, no entendimento das decisões técnicas e na construção de uma base sólida e consciente para projetos futuros.
+Durante o desenvolvimento, o projeto utiliza **artes autorais próprias** como conteúdo de teste e validação visual.
+
+Essas artes são usadas para:
+- validar layout, proporções e composição
+- testar lightbox e interações
+- observar leitura visual, contraste e hierarquia
+- manter coerência estética durante a evolução do projeto
+
+O uso de arte autoral faz parte da identidade do Atelier, integrando **processo criativo e desenvolvimento técnico** dentro do mesmo projeto.
+
+---
+
+## 🧠 Arquitetura e método
+
+O desenvolvimento do Atelier segue princípios claros:
+
+- Passos executados em ordem natural
+- Nenhuma etapa pulada
+- Nenhuma interface antecipada sem base sólida
+- Código limpo, legível e reversível
+- Decisões técnicas conscientes
+- Crescimento planejado, sem pressa
+
+A prioridade é **entender o sistema**, não apenas fazê-lo funcionar.
+
+---
+
+## 🚧 Status do projeto
+
+🟢 Front-end estável, funcional e com identidade visual definida  
+🟢 Backend estruturado com leitura, escrita e persistência  
+🟢 Artes autorais integradas ao processo de desenvolvimento  
+🟢 Base sólida pronta para evolução futura  
+
+Nada ficou pendente.  
+Nada foi feito às pressas.
+
+---
+
+## 🧭 Próximos passos (quando retomado)
+
+Os próximos passos serão **escolhas conscientes**, não obrigações imediatas:
+
+- Testar a rota POST de forma controlada
+- Criar interface mínima para envio de inspirações
+- Planejar upload de imagens no backend
+- Evoluir autenticação para o Flask futuramente
+
+Essas etapas só acontecerão após validação completa da base atual.
+
+---
+
+## 📝 Observação final
+
+Este projeto faz parte de um processo de aprendizado contínuo.
+
+O foco não está apenas no resultado visual, mas na **construção de uma base técnica forte**, capaz de sustentar projetos maiores no futuro, sem improviso e sem retrabalho.
