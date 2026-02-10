@@ -128,3 +128,101 @@ body::before {
   margin: 0 auto;
   padding: 28px 20px;
 }
+
+/* FORMULÁRIO DE ADIÇÃO – ESTILO ATELIER */
+.form-minimo {
+  margin: 80px auto 40px;
+  padding: 24px 28px;
+  max-width: 420px;
+
+  background-color: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  text-align: center;
+}
+
+/* INPUT */
+.form-minimo input {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+
+  padding: 10px 6px;
+  color: #f2f2f2;
+  font-family: "Cormorant Garamond", serif;
+  font-size: 16px;
+
+  outline: none;
+}
+
+.form-minimo input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+  font-style: italic;
+}
+
+/* BOTÃO */
+.form-minimo button {
+  background: none;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 20px;
+
+  padding: 10px 22px;
+  color: #f2f2f2;
+  font-family: "Cormorant Garamond", serif;
+  font-size: 15px;
+  letter-spacing: 0.5px;
+
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.form-minimo button:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+/* MENSAGEM */
+#mensagem {
+  font-size: 14px;
+  opacity: 0.8;
+}
+
+/* BOTÃO APAGAR – DISCRETO */
+.paper {
+  position: relative;
+}
+
+.btn-apagar {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+
+  background: rgba(0, 0, 0, 0.5);
+  border: none;
+  border-radius: 50%;
+
+  width: 26px;
+  height: 26px;
+
+  color: #fff;
+  font-size: 16px;
+  line-height: 1;
+
+  cursor: pointer;
+
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+/* aparece só no hover do card */
+.paper:hover .btn-apagar {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+

@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, jsonify, request
 import json
 import os
 
@@ -67,10 +67,19 @@ def adicionar_inspiracao():
     with open(caminho_json, "r", encoding="utf-8") as arquivo:
         inspiracoes = json.load(arquivo)
 
-        # Adiciona a nova inspiração
-        inspiracoes.append({
-            "imagem": dados["imagem"]
-        })
+    # Calcula o próximo ID
+    if inspiracoes:
+        ultimo_id = max(item["id"] for item in inspiracoes)
+    else:
+        ultimo_id = 0
+
+    novo_id = ultimo_id + 1   
+
+    # Adiciona a nova inspiração com id
+    inspiracoes.append({
+        "id": novo_id,
+        "imagem": dados["imagem"]
+    })
 
     # Salva de volta no arquivo JSON
     with open(caminho_json, "w", encoding="utf-8") as arquivo:
@@ -80,6 +89,49 @@ def adicionar_inspiracao():
     return jsonify({
         "mensagem": "Inspiração adicionada com sucesso!"
     }), 201
+
+@app.route("/inspiracoes/apagar", methods=["POST"])
+def apagar_inspiracao():
+    """
+    Rota responsável por apagar uma inspiração
+          existente pelo id
+    """
+    # Caminho do arquivo JSON
+    caminho_json = os.path.join(
+        app.root_path,
+        "data",
+        "inspiracoes.json"
+    )
+
+    # Dados recebidos no POST (JSON)
+    dados = request.get_json()
+    # Validação básica: precisa ter id 
+    if not dados or "id" not in dados:
+        return jsonify({
+            "erro": "Campo 'id' é obrigatório."
+        }), 400
+    id_para_apagar = dados["id"]
+
+    # Abre o JSON atual
+    with open(caminho_json, "r", encoding="utf-8") as arquivo:
+        inspiracoes = json.load(arquivo)
+    # Filtra removendo apenas o item com o id fornecido
+    novas_inspiracoes = [
+        item for item in inspiracoes if item["id"] != id_para_apagar
+    ]
+    # Se nada foi removido, o id não existia
+    if len(novas_inspiracoes) == len(inspiracoes):
+        return jsonify({
+            "erro": "Inspiração não encontrada."
+        }), 404
+    # Salva o JSON atualizado
+    with open(caminho_json, "w", encoding="UTF-8") as arquivo:
+        json.dump(novas_inspiracoes, arquivo, ensure_ascii=False, indent=2)
+    
+    # Resposta de sucesso
+    return jsonify({
+        "mensagem": "Inspiração apagada com sucesso!"
+    }), 200
 
 #Execução do App
 if __name__ == "__main__":

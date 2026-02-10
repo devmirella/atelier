@@ -37,6 +37,9 @@
       
       {% for item in inspiracoes %} <!-- Loop JINJA (Flask) para cada item da lista "inspiracao" enviada pelo app.py, cria um card de imagem -->
         <article class="paper">
+          <button class="btn-apagar" title="Apagar inspiração">
+            X
+          </button> 
           <img class="inspo-img" src="{{ item.imagem }}" alt=""> <!-- Imagem da inspiracão "item.imagem" vem do dicionário criado no Flask. -->
         </article>
       {% endfor %}
@@ -68,6 +71,23 @@
     lightboxImg.src = "";
   });
 </script>
+  </script>
 
+  <!-- FORMULÁRIO MÍNIMO (temporário) -->
+  <div class="form-minimo">
+    <input 
+      type="text" 
+      id="imagemInput" 
+      placeholder="nome da imagem (ex: teste.jpg)"
+    >
+
+    <button id="btnAdicionar">
+      adicionar inspiração
+    </button>
+
+    <p id="mensagem"></p>
+  </div>
+
+  <script src="/static/js/inspiracoes.js"></script>
 </body>
 </html>
