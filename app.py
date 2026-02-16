@@ -1,6 +1,7 @@
 from flask import Flask, render_template, jsonify, request
 import json
 import os
+from pathlib import Path
 
 app = Flask(__name__)
 
@@ -14,11 +15,19 @@ def home():
 
 @app.route("/arte")
 def arte():
-    return render_template("arte.html")
+    caminho = Path("data/arte.json") # Define o caminho absoluto da pasta raiz do projeto
+    # Abre o arquivo JSON em modo leitura
+    with open(caminho, encoding="utf-8") as f: 
+        artes = json.load(f)
+        return render_template("arte.html", artes=artes)    # Envia a lista de artes para o template arte.html
 
 @app.route("/exposed")
 def exposed():
-    return render_template("exposed.html")
+
+    caminho = Path("data/exposed.json") 
+    with open(caminho, encoding="utf-8") as f:
+        exposed = json.load(f)
+    return render_template("exposed.html", exposed=exposed)
 
 @app.route("/inspiracoes")
 def inspiracoes():

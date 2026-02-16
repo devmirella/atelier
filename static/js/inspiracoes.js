@@ -1,6 +1,30 @@
 // Espera o HTML inteiro ser carregado antes de rodar qualquer JavaScript
 document.addEventListener("DOMContentLoaded", () => {
 
+    // Protege a página
+    if (localStorage.getItem("atelier_logado") !== "true") {
+         window.location.href = "/";
+         return;
+    }
+
+    const imagens = document.querySelectorAll(".inspo-img"); // Seleciona todas as imagens renderizadas 
+    const lightbox = document.getElementById("lightbox"); // Seleciona o lightbox
+    const lightboxImg = lightbox.querySelector("img"); // Seleciona a imagem dentro do lightbox 
+
+    // Adiciona um evento de clique para cada imagem, que ao ser clicada, exibe a imagem no lightbox
+    imagens.forEach(img => {
+        img.addEventListener("click", () => {
+            lightboxImg.src = img.src;
+            lightbox.style.display = "flex";
+        });
+    });
+
+    // Fecha o lightbox ao clicar fora da imagem
+    lightbox.addEventListener("click", () => {
+        lightbox.style.display = "none";
+        lightboxImg.src = "";
+    });
+
     // Seleciona input onde o usuário digita o nome da imagem 
     const inputImagem = document.querySelector("#imagemInput");
 
