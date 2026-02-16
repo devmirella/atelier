@@ -58,6 +58,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
+    
     // Apagar inspiração 
     // querySelectorAll retorna uma lista (NodeList)
     document.querySelectorAll(".btn-apagar").forEach(botao => {
@@ -65,6 +66,8 @@ document.addEventListener("DOMContentLoaded", () => {
             // this aqui é o botão que foi clicado e closest(".paper") sobe no HTML até encontrar o card pai
             const card = this.closest(".paper");
             const id = Number(card.dataset.id); 
+            console.log("ID ENVIADO:", id);
+
             // Abre uma confirmação no navegador e se o usuário clicar em "cancelar", tudo para aqui
             if (!confirm("Deseja apagar esta inspiração?")) {
                 return;
@@ -81,12 +84,19 @@ document.addEventListener("DOMContentLoaded", () => {
                     id: id
                 })
             })
-
-            .then(res => res.json())
-            .then(() => {
-                location.reload();
+            // Esse .then recebe a Resposta do servidor (não os dados ainda)
+            .then(res => {
+                if(!res.ok) {
+                    throw new Error("Erro ao apagar inspiração.");
+                }
+                return res.json() // Se chegou ate aqui, significa que o backend apagou com sucesso
             })
-            // Se acontecer qualquer erro no processo 
+            // Esse .the só executa se o anterior não 
+            .then(() => {
+                card.remove();
+            })
+            
+            // So entra aqui se algum erro aconteceu
             .catch(() => {
                 alert("Erro ao apagar inspiração.");
             });

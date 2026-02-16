@@ -36,7 +36,7 @@
     <section class="grid">
       
       {% for item in inspiracoes %} <!-- Loop JINJA (Flask) para cada item da lista "inspiracao" enviada pelo app.py, cria um card de imagem -->
-        <article class="paper">
+        <article class="paper" data-id="{{ item.id }}"> <!-- "data-id" é um atributo personalizado que armazena o ID da inspiração, facilitando a identificação para ações como exclusão -->
           <button class="btn-apagar" title="Apagar inspiração">
             X
           </button> 
