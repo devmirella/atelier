@@ -29,8 +29,9 @@
                 <div class="arte" data-id="{{ arte.id }}"> <!-- Card individual de uma arte, data-id recebe i id da arte vindo do JSON-->
                     <span class="estrela">☆</span> <!-- Botão de favorito, inicialmente vazio (☆) -->
                     <div class="imagem"> <!-- Container usado para layout e css -->
-                        <img src="{{ arte.imagem }}" alt="{{ arte.titulo }}"> <!-- Imagem da arte, o caminho vem do JSON -->
+                        <img src="{{ arte.imagem }}" alt="Arte {{ arte.id }}"> <!-- Imagem da arte, o caminho vem do JSON -->
                     </div>
+                    <button class="btn-apagar" data-id="{{ arte.id }}">Apagar</button>
                 </div>  
             {% endfor %} 
         </div>

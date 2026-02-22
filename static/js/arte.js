@@ -45,3 +45,37 @@ document.querySelector("#filtro-favoritos").addEventListener("change", function 
         }
     });
 });
+
+
+document.querySelectorAll(".btn-apagar").forEach(botao => {
+    botao.addEventListener("click", function () {
+
+        const idArte = this.dataset.id;
+
+        if (!confirm("Deseja realmente apagar esta arte?")) {
+            return;
+        }
+
+        fetch("/arte/apagar", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                id: Number(idArte)
+            })
+        })
+        .then(response => response.json())
+        .then(resultado => {
+            if (resultado.sucesso) {
+                // remove o card inteiro da tela
+                this.closest(".arte").remove();
+            } else {
+                alert(resultado.erro || "Erro ao apagar a arte");
+            }
+        })
+        .catch(() => {
+            alert("Erro de conexão com o servidor");
+        });
+    });
+});

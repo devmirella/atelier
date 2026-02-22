@@ -15,11 +15,86 @@ def home():
 
 @app.route("/arte")
 def arte():
-    caminho = Path("data/arte.json") # Define o caminho absoluto da pasta raiz do projeto
-    # Abre o arquivo JSON em modo leitura
-    with open(caminho, encoding="utf-8") as f: 
+    caminho = Path("data/arte.json")
+
+    if caminho.exists():
+        with open(caminho, encoding="utf-8") as f:
+            artes = json.load(f)
+    else: 
+        artes = []
+    return render_template("arte.html", artes=artes)
+
+@app.route("/arte/adicionar", methods=["POST"])
+def adicionar_arte():
+    caminho = Path("data/arte.json") # Caminho relativo para o arquivo arte.json
+
+    # Lê o corpo da requisição
+    dados = request.get_json()
+
+    # Validação básica
+    if not dados or "imagem" not in dados or dados["imagem"].strip() == "":
+        return jsonify({"erro": "URL da imagem é obrigatória"}), 400
+    
+    # Garante que o arquivo existe
+    if not caminho.exists():
+        artes = []
+    else:
+        with open(caminho, encoding="utf-8") as f:
+            artes = json.load(f)
+
+    # Gera novo ID
+    novo_id = 1
+    if artes:
+        novo_id = max(item["id"] for item in artes ) + 1
+
+    # Nova arte
+    nova_arte = {
+        "id": novo_id,
+        "imagem": dados["imagem"]
+    }
+
+    artes.append(nova_arte)
+
+    # Salva no JSON
+    with open(caminho, "w", encoding="utf-8") as f: 
+        json.dump(artes, f, ensure_ascii=False, indent=2)
+
+    return jsonify(nova_arte), 201
+
+@app.route("/arte/apagar", methods=["POST"])
+def apagar_arte():
+    caminho = Path("data/arte.json")
+
+    dados = request.get_json()
+
+    # Validação básica 
+    if not dados or "id" not in dados:
+        return jsonify({"erro": "ID é obrigatório"}), 400
+    
+    id_para_apagar = dados["id"]
+
+    # Se o arquivo não existir, não há o que apagar
+    if not caminho.exists():
+        return jsonify({"erro": "Arquivo de arte não encontrado"}), 404
+    
+    # Lê o JSON 
+    with open(caminho, encoding="utf-8") as f:
         artes = json.load(f)
-        return render_template("arte.html", artes=artes)    # Envia a lista de artes para o template arte.html
+
+    # Filtra removendo apenas o ID informado
+    artes_filtradas = [arte for arte in artes if arte["id"] != id_para_apagar]
+
+    # Se nada mudou, o ID não existia
+    if len(artes) == len(artes_filtradas):
+        return jsonify({"erro": "Arte não encontrada"}), 404
+    
+    # Salva o JSON atualizado
+    with open(caminho, "w", encoding="utf-8") as f:
+        json.dump(artes_filtradas, f, ensure_ascii=False, indent=2)
+
+    return jsonify({"sucesso": True}), 200
+
+
 
 @app.route("/exposed")
 def exposed():

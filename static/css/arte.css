@@ -80,3 +80,45 @@ body::before {
     font-size: 18px;
     color: #d8c27a;
 }
+
+
+
+/* Garante que o card seja referência de posição */
+.arte {
+    position: relative;
+}
+/* Botão apagar escondido por padrão */
+.btn-apagar {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+
+    background: rgba(120, 20, 20, 0.85);
+    color: #fff;
+
+    border: none;
+    border-radius: 4px;
+
+    padding: 6px 10px;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+
+    cursor: pointer;
+
+    opacity: 0;
+    pointer-events: none;
+
+    transition: opacity 0.3s ease, background 0.3s ease;
+}
+
+/* Mostra o botão só ao passar o mouse no card */
+.arte:hover .btn-apagar {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* Efeito hover no botão */
+.btn-apagar:hover {
+    background: rgba(180, 30, 30, 0.95);
+}
