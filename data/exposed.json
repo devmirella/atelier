@@ -1,10 +1,9 @@
 [
     {
         "id": 1,
-        "imagem": "/static/images/exposed-01.jpg"
-    },
-    {
-        "id": 2,
-        "imagem": "/static/images/exposed-02.jpg"
+        "imagem": "/static/images/exposed-01.jpg",
+        "titulo": "Esboço",
+        "tag": "grafite"
+
     }
 ]

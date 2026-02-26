@@ -1,10 +1,6 @@
 [
   {
     "id": 2,
-    "imagem": "/static/images/arte-02.jpg"
-  },
-  {
-    "id": 3,
-    "imagem": "https://exemplo.com/imagem.jpg"
+    "imagem": "/static/images/inspo-01.jpeg"
   }
 ]

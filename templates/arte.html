@@ -22,6 +22,7 @@
         </label>
     </header>
 
+    <!-- Galeria -->
     <main class="galeria">
         
         <div class="grid-arte">
@@ -36,6 +37,20 @@
             {% endfor %} 
         </div>
     </main>
+
+        <!-- Formulario responsável por adicionar uma nova arte -->
+    <form id="formArte" class="form-minimo">
+        <input
+            type="text"
+            id="imagemArte"
+            placeholder="URL da imagem"
+            required
+        >
+
+        <button type="submit">
+            Adicionar
+        </button>
+    </form>
         
 
 </body>

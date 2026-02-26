@@ -94,15 +94,53 @@ def apagar_arte():
 
     return jsonify({"sucesso": True}), 200
 
-
-
 @app.route("/exposed")
 def exposed():
+    caminho = Path("data/exposed.json")
 
-    caminho = Path("data/exposed.json") 
-    with open(caminho, encoding="utf-8") as f:
-        exposed = json.load(f)
+    if caminho.exists():
+        with open(caminho, encoding="utf-8") as f:
+            exposed = json.load(f)
+    else:
+        exposed = []
+
     return render_template("exposed.html", exposed=exposed)
+
+@app.route("/exposed/adicionar", methods=["POST"])
+def adicionar_exposed():
+    # Define o caminho do arquivo JSON onde as artes do exposed são salvas
+    caminho = Path("data/exposed.json")
+
+    dados = request.get_json()
+    if not dados or "imagem" not in dados or dados["imagem"].strip() == "":
+        return jsonify({"erro": "URL da imagem é obrigatoria"}), 400
+    
+    # Verifica se o arquivo exposed.json já existe
+    if caminho.exists():
+        with open(caminho, encoding="utf-8") as f:
+            exposed = json.load(f)
+    else:
+        # Se não existir, inicia uma lista vazia
+        exposed = []
+    novo_id = 1
+    if exposed:
+        novo_id = max(item["id"] for item in exposed) + 1
+    # Cria um novo item que será salvo no JSON
+    novo_item = {
+        "id": novo_id,
+        "imagem": dados["imagem"],
+        "titulo": dados.get("titulo", ""),
+        "tag": dados.get("tag", "")
+    }
+    # Adicionar o novo item á lista existente
+    exposed.append(novo_item)
+    # Abre o arquivo JSON em modo escrita
+    with open(caminho, "w", encoding="utf-8") as f:
+        json.dump(exposed, f, ensure_ascii=False, indent=2) #  # indent=2 deixa o JSON legível
+    # Retorna o item criado como resposta JSON
+    return jsonify(novo_item), 201
+
+
 
 @app.route("/inspiracoes")
 def inspiracoes():

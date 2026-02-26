@@ -122,3 +122,76 @@ body::before {
 .btn-apagar:hover {
     background: rgba(180, 30, 30, 0.95);
 }
+
+/* Ajusta a imagem dentro do card */
+.imagem img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    object-fit: contain;
+}
+
+/* Centraliza a imagem dentro do card */
+.imagem {
+    display: flex;
+    align-items: center;    
+    justify-content: center;
+
+}
+
+/* FORMULÁRIO DE ADIÇÃO – ESTILO ATELIER */
+.form-minimo {
+  margin: 80px auto 0;
+  padding: 24px 28px;
+  max-width: 420px;
+
+  background-color: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  text-align: center;
+}
+
+/* INPUT */
+.form-minimo input {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+
+  padding: 10px 6px;
+  color: #f2f2f2;
+  font-family: "Cormorant Garamond", serif;
+  font-size: 16px;
+
+  outline: none;
+}
+
+.form-minimo input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+  font-style: italic;
+}
+
+/* BOTÃO */
+.form-minimo button {
+  background: none;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 20px;
+
+  padding: 10px 22px;
+  color: #f2f2f2;
+  font-family: "Cormorant Garamond", serif;
+  font-size: 15px;
+  letter-spacing: 0.5px;
+
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.form-minimo button:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+}
