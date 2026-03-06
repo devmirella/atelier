@@ -1,3 +1,4 @@
+
 # Atelier
 
 Projeto autoral em desenvolvimento, iniciado no **front-end com HTML, CSS e JavaScript puro** e atualmente em evolução para o **backend com Python e Flask**.
@@ -20,8 +21,7 @@ Mais do que um produto final, o projeto representa um **processo de aprendizado 
 - JSON como fonte de verdade (backend)
 
 ### Back-end
-- Python  
-- Flask
+- Python e Flask
 
 ---
 
@@ -43,18 +43,23 @@ Mais do que um produto final, o projeto representa um **processo de aprendizado 
 - Sistema de favoritos
 - Persistência dos favoritos no LocalStorage
 - Filtro para exibição apenas de itens favoritados
+- Integração inicial com backend via JSON
 
 ### 🧠 Exposed
 - Área dedicada a esboços e processos criativos
 - Cards interativos
-- Expansão de conteúdo
+- Abertura e fechamento de cards
 - Adição dinâmica de artes dentro dos cards
+- Remoção de cards via backend
+- Integração com persistência em JSON
+- Atualização da interface sem recarregar a página
 
 ### 🌿 Inspirações
 - Galeria de referências visuais
 - Lightbox para visualização ampliada
 - Conteúdo servido dinamicamente pelo backend
 - Dados armazenados e persistidos em arquivo JSON
+- Adição e remoção de inspirações via rotas Flask
 
 ---
 
@@ -68,20 +73,34 @@ Atualmente, o backend possui:
 - Estrutura organizada (`templates/`, `static/`, `data/`)
 - Rotas definidas para todas as páginas
 - Integração com o front-end sem quebra de layout
-- Leitura de dados a partir de `inspiracoes.json`
-- Escrita de novos dados no JSON via rota POST
+- Leitura de dados a partir de arquivos JSON
+- Escrita de novos dados via rotas POST
+- Remoção de dados por ID
 - Persistência garantida entre reinicializações do servidor
 
-O arquivo JSON atua como **fonte de verdade inicial**, permitindo evolução futura sem retrabalho.
+Os arquivos JSON atuam como **fonte de verdade inicial**, permitindo evolução futura sem retrabalho.
 
 ---
 
 ## 💾 Persistência de dados
 
 - Pasta `data/` dedicada exclusivamente a dados
-- Arquivo `inspiracoes.json` válido e nunca vazio
-- Backend responsável por leitura e escrita
-- Dados preservados após desligar e ligar o servidor Flask
+- Arquivos JSON utilizados como base de persistência
+
+Arquivos atuais:
+
+- `inspiracoes.json`
+- `arte.json`
+- `exposed.json`
+
+O backend é responsável por:
+
+- leitura dos dados
+- escrita de novos registros
+- remoção por ID
+- envio dos dados para os templates Flask
+
+Os dados permanecem preservados após desligar e reiniciar o servidor.
 
 ---
 
@@ -90,6 +109,7 @@ O arquivo JSON atua como **fonte de verdade inicial**, permitindo evolução fut
 Durante o desenvolvimento, o projeto utiliza **artes autorais próprias** como conteúdo de teste e validação visual.
 
 Essas artes são usadas para:
+
 - validar layout, proporções e composição
 - testar lightbox e interações
 - observar leitura visual, contraste e hierarquia
@@ -117,12 +137,13 @@ A prioridade é **entender o sistema**, não apenas fazê-lo funcionar.
 ## 🚧 Status do projeto
 
 🟢 Front-end estável, funcional e com identidade visual definida  
-🟢 Backend estruturado com leitura, escrita e persistência  
+🟢 Backend estruturado com Flask e persistência via JSON  
+🟢 CRUD funcional em Inspirações  
+🟢 CRUD funcional em Exposed  
+🟢 Integração front-end ↔ backend estabilizada  
 🟢 Artes autorais integradas ao processo de desenvolvimento  
-🟢 Base sólida pronta para evolução futura  
 
-Nada ficou pendente.  
-Nada foi feito às pressas.
+A base do projeto já está estruturada para evoluções futuras.
 
 ---
 
@@ -130,10 +151,12 @@ Nada foi feito às pressas.
 
 Os próximos passos serão **escolhas conscientes**, não obrigações imediatas:
 
-- Testar a rota POST de forma controlada
-- Criar interface mínima para envio de inspirações
-- Planejar upload de imagens no backend
+- Finalizar CRUD completo da página **Arte**
+- Melhorar organização das artes internas da **Exposed**
+- Implementar visualização ampliada das artes internas
+- Planejar upload real de imagens no backend
 - Evoluir autenticação para o Flask futuramente
+- Considerar migração para banco de dados
 
 Essas etapas só acontecerão após validação completa da base atual.
 
