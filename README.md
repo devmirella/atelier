@@ -147,7 +147,7 @@ A base do projeto já está estruturada para evoluções futuras.
 
 ---
 
-## 🧭 Próximos passos (quando retomado)
+## 🧭 Próximos passos
 
 Os próximos passos serão **escolhas conscientes**, não obrigações imediatas:
 
