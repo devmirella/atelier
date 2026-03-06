@@ -1,9 +1,8 @@
 [
-    {
-        "id": 1,
-        "imagem": "/static/images/exposed-01.jpg",
-        "titulo": "Esboço",
-        "tag": "grafite"
-
-    }
+  {
+    "id": 1,
+    "imagem": "https://picsum.photos/600/800",
+    "titulo": "ROSTO",
+    "tag": "FRENTE"
+  }
 ]

@@ -46,6 +46,10 @@ body::before {
   max-width: 1200px;
   margin: 0 auto;
   padding: 28px 18px 40px;
+
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Topo cabeçalho */
@@ -103,26 +107,23 @@ body::before {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
   gap: 18px;
+
+  flex: 1; /* empurra o formulário para baixo */
 }
 
 /* Card paper */
 .paper {
   grid-column: span 3;
   position: relative;
-
   background: rgba(255, 255, 255, 0.08);
+  color: var(--ink);
   backdrop-filter: blur(3px);
   -webkit-backdrop-filter: blur(3px);
-
   border-radius: 14px;
   box-shadow: var(--soft);
   overflow: hidden;
   padding: 12px;
-
-  color: var(--ink);
-
   transition: box-shadow 0.2s ease, transform 0.2s ease;
-
 }
 
 .paper:hover {
@@ -137,17 +138,14 @@ body::before {
   top: 10px;
   left: 50%;
   transform: translateX(-50%) rotate(-2deg);
-
   width: 86px;
   height: 26px;
-
   background: var(--tape);
   border: 1px solid var(--tape-edge);
   border-radius: 6px;
-
   box-shadow: var(--soft);
-  z-index: 3;
   pointer-events: none;
+  z-index: 3;
 }
 
 /* Imagem do esboço */
@@ -252,25 +250,47 @@ body::before {
   object-fit: cover;
 }
 
+.arte:hover img {
+  filter: brightness(0.85);
+}
+
 .arte.expandida {
   grid-column: 1 / -1;
-  height: 360px;
+
+  height: auto;
+  max-height: 450px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.arte.expandida img {
+  width: auto !important;
+  height: auto !important;
+
+  max-width: 100%;
+  max-height: 450px;
+
+  object-fit: contain;
 }
 
 .fechar-arte {
   position: absolute;
   top: 6px;
   right: 6px;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.6);
   color: #fff;
   cursor: pointer;
   padding: 4px 7px;
   border-radius: 50%;
-  display: none;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  z-index: 10;
 }
 
-.arte.expandida .fechar-arte {
-  display: block;
+.arte:hover .fechar-arte {
+  opacity: 1;
 }
 
 .adicionar {
@@ -292,4 +312,94 @@ body::before {
   .top { align-items: flex-start; }
   .titulo h1 { font-size: 38px; }
   .paper { grid-column: span 12; }
+}
+
+/* FORMULÁRIO DE ADIÇÃO – ESTILO ATELIER */
+.form-minimo {
+  margin-top: auto;
+  margin-bottom: 40px;
+
+  padding: 24px 28px;
+  max-width: 420px;
+
+  background-color: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 14px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  text-align: center;
+  align-self: center;
+}
+
+/* INPUT */
+.form-minimo input {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 10px 6px;
+  color: #f2f2f2;
+  font-family: "Cormorant Garamond", serif;
+  font-size: 16px;
+  outline: none;
+}
+
+.form-minimo input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+  font-style: italic;
+}
+
+/* BOTÃO */
+.form-minimo button {
+  background: none;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 20px;
+  padding: 10px 22px;
+  color: #f2f2f2;
+  font-family: "Cormorant Garamond", serif;
+  font-size: 15px;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.form-minimo button:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+/* BOTÃO APAGAR – TEXTO ADAPTÁVEL */
+
+.paper {
+  position: relative;
+}
+
+.btn-apagar {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+
+  background: rgba(0, 0, 0, 0.5);
+  border: none;
+  border-radius: 20px;
+
+  padding: 4px 10px; /* permite que a palavra se ajuste */
+
+  color: #fff;
+  font-size: 12px;
+  font-family: "Cormorant Garamond", serif;
+
+  cursor: pointer;
+
+  opacity: 0;
+  pointer-events: none;
+
+  transition: opacity 0.2s ease;
+}
+
+/* aparece apenas no hover do card */
+.paper:hover .btn-apagar {
+  opacity: 1;
+  pointer-events: auto;
 }

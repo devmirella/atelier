@@ -33,18 +33,14 @@
   </div>
 
   <div class="linha"></div>
-  <form id="formExposed" class="form-minimo">
-    <!-- Titulo do card -->
-     <input type="text" id="tituloExposed" placeholder="Título do esboço" required >
-     <input type="text" id="tagExposed" placeholder="tag ou categoria" required >
-     <input type="url" id="imagemExposed" placeholder="URL da imagem" required >
-     <button type="submit">Adicionar</button>
-  </form>
-
+ 
   <section class="grid"> <!-- Seção principal que organiza os cards do exposed -->
+
     <div class="grid-exposed"> <!-- Serve para agrupar os artigos gerados dinamicamente -->
+
       {% for item in exposed %} <!-- loop Jinja... para cada item do JSON , um <article> é criado -->
-        <article class="paper"> 
+
+        <article class="paper" data-id="{{ item.id }}"> 
 
           <img class="sketch" src="{{ item.imagem }}"> <!-- A imagem do esboço é inserida aqui, o caminho vem do JSON -->
 
@@ -62,10 +58,21 @@
              <button class="adicionar">Adicionar Arte</button>
             </div>
           </div>
+
+          <button class="btn-apagar" data-id="{{ item.id }}">Apagar</button>
+
         </article>
       {% endfor %}  
     </div>
   </section>
+
+  <form id="formExposed" class="form-minimo">
+    <input 
+      type="text" id="tituloExposed" placeholder="Título do esboço" required>
+    <input type="text" id="tagExposed" placeholder="Tag ou categoria" required>
+    <input type="url" id="imagemExposed" placeholder="URL da imagem" required>
+    <button type="submit">Adicionar</button>
+  </form>
 </div>
 
 </body>

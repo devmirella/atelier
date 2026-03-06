@@ -140,6 +140,38 @@ def adicionar_exposed():
     # Retorna o item criado como resposta JSON
     return jsonify(novo_item), 201
 
+@app.route("/exposed/apagar", methods=["POST"])
+def apagar_exposed(): # Define a função Python que será chamada quando a rota for acessada.
+
+    caminho = Path("data/exposed.json") 
+    dados = request.get_json()
+
+    # Validação básica
+    if not dados or "id" not in dados:
+        return jsonify({"erro": "ID é obrigatório"}), 400
+    id_para_apagar = dados["id"]
+
+    # Se o arquivo não existir
+    if not caminho.exists():
+        return jsonify({"erro": "Arquivo não encontrado"}), 404
+    
+    # Lê o JSON
+    with open(caminho, encoding="utf-8") as f:
+        exposed = json.load(f)
+
+    # Remove item com o id informado
+    novos_items = [item for item in exposed if item["id"] != id_para_apagar]
+
+    # Se nada foi removido 
+    if len(novos_items) == len(exposed):
+        return jsonify({"erro": "Item não encontrado"}), 404
+    
+    # Salva o JSON atualizado
+    with open(caminho, "w", encoding="utf-8") as f:
+        json.dump(novos_items, f, ensure_ascii=False, indent=2)
+
+    return jsonify({"sucesso": True}), 200
+
 
 
 @app.route("/inspiracoes")
