@@ -1,7 +1,7 @@
 "use strict";
 
- document.addEventListener("DOMContentLoaded", () => {
-  
+document.addEventListener("DOMContentLoaded", () => {
+
   // Seleção de elementos principais
   const grid = document.querySelector(".grid-exposed");
   const form = document.getElementById("formExposed");
@@ -10,84 +10,107 @@
   const inputTitulo = document.getElementById("tituloExposed");
   const inputTag = document.getElementById("tagExposed");
 
-  function ativarCard(card) {
-    card.addEventListener("click", e => {
+  const lightbox = document.getElementById("lightboxArte");
+  const lightboxImg = document.getElementById("lightboxImg");
+
+  // ─── Ativar abertura/fechamento do card ───────────────────────────────────
+  // O clique agora fica no .paper (article) inteiro.
+  // Abre ao clicar no .titulo-fita ou no .sketch.
+  // Fecha ao clicar no .fechar-card.
+  function ativarCard(paper) {
+    paper.addEventListener("click", e => {
+
       // Fechar card
       if (e.target.classList.contains("fechar-card")) {
-          card.classList.remove("aberto");
+        paper.classList.remove("aberto");
         return;
       }
-      // Só abre se clicar na capa
-      if (!e.target.closest(".card-capa") && !e.target.classList.contains("sketch")) return; // Permite clique apenas na capa do card ou no sketch
 
-      card.classList.toggle("aberto");
+      // Não propaga cliques nos botões internos
+      if (e.target.closest(".adicionar") || e.target.closest(".btn-apagar")) return;
+      if (e.target.closest(".artes")) return;
+
+      // Abre ao clicar no título ou na imagem de capa
+      if (
+        e.target.classList.contains("titulo-fita") ||
+        e.target.closest(".titulo-fita") ||
+        e.target.classList.contains("sketch")
+      ) {
+        paper.classList.toggle("aberto");
+      }
     });
   }
 
-  // Função: Ativar botão "ADICIONAR ARTE"
-  function ativarAdicionarArte(card) {
-    const botao = card.querySelector(".adicionar");
-
+  // ─── Ativar botão "ADICIONAR ARTE" ───────────────────────────────────────
+  function ativarAdicionarArte(paper) {
+    const botao = paper.querySelector(".adicionar");
     if (!botao) return;
 
     botao.addEventListener("click", e => {
       e.stopPropagation();
 
-      const url = prompt("Cole a URL da arte");
+      const url = prompt("Cole a URL da arte:");
+      if (!url || !url.trim()) return;
 
-      if (!url) return;
-
-      const artes = card.querySelector(".artes");
+      const artes = paper.querySelector(".artes");
       const arte = document.createElement("div");
       arte.className = "arte";
 
       arte.innerHTML = `
-        <span class="fechar-arte">X</span>
-        <img src="${url}">
+        <span class="fechar-arte">✕</span>
+        <img src="${url.trim()}" alt="arte">
       `;
       artes.appendChild(arte);
     });
   }
 
-  // Função: Ativar expandir arte / fechar arte
+  // ─── Controle de artes internas (remover + lightbox) ─────────────────────
   document.addEventListener("click", e => {
 
-    // Clica no X
+    // Remover arte
     if (e.target.classList.contains("fechar-arte")) {
       e.stopPropagation();
-
       const arte = e.target.closest(".arte");
-
-      if (confirm("Deseja remover esta arte?")) {
+      if (arte && confirm("Deseja remover esta arte?")) {
         arte.remove();
       }
       return;
     }
-    const arte = e.target.closest(".arte");
 
-    if (!arte) return;
-
-    document.querySelectorAll(".arte").forEach(a =>
-      a.classList.remove("expandida")
-    );
-
-    arte.classList.add("expandida");
+    // Abrir arte no lightbox (clique na imagem)
+    const imagemArte = e.target.closest(".arte img");
+    if (imagemArte && lightbox && lightboxImg) {
+      lightboxImg.src = imagemArte.src;
+      lightbox.style.display = "flex";
+    }
   });
 
-  // Ativar interação dos cards existentes
-  document.querySelectorAll(".card").forEach(card => {
-    ativarCard(card);
-    ativarAdicionarArte(card);
+  // ─── Fechar lightbox ──────────────────────────────────────────────────────
+  if (lightbox) {
+    lightbox.addEventListener("click", () => {
+      lightbox.style.display = "none";
+      lightboxImg.src = "";
+    });
+  }
+
+  if (lightboxImg) {
+    lightboxImg.addEventListener("click", e => e.stopPropagation());
+  }
+
+  // ─── Ativar cards já existentes no HTML ───────────────────────────────────
+  document.querySelectorAll(".paper").forEach(paper => {
+    ativarCard(paper);
+    ativarAdicionarArte(paper);
   });
 
-  // Função apagar item do exposed
+  // ─── Apagar item ──────────────────────────────────────────────────────────
   async function apagarExposed(id, elemento) {
     if (!confirm("Deseja realmente apagar este item?")) return;
 
     try {
       const resposta = await fetch("/exposed/apagar", {
         method: "POST",
-        headers: { "Content-Type": "application/json"},
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id: Number(id) })
       });
 
@@ -97,63 +120,58 @@
         throw new Error(resultado.erro || "Erro ao apagar");
       }
       elemento.remove();
+
     } catch (erro) {
-      alert("Erro ao apagar item");
+      alert("Erro ao apagar item: " + erro.message);
     }
   }
 
   // Ativar botão apagar nos itens existentes
   document.querySelectorAll(".btn-apagar").forEach(botao => {
-    botao.addEventListener("click", function () {
-
-      const card = this.closest(".paper");
-      const id = card.dataset.id;
-
-      apagarExposed(id, card);
+    botao.addEventListener("click", function (e) {
+      e.stopPropagation();
+      const paper = this.closest(".paper");
+      const id = paper.dataset.id;
+      apagarExposed(id, paper);
     });
   });
 
-  // Função: Criar card exposed no DOM
+  // ─── Criar card no DOM ────────────────────────────────────────────────────
   function criarCardExposed(item) {
     const article = document.createElement("article");
-
     article.className = "paper";
     article.dataset.id = item.id;
 
     article.innerHTML = `
-    <img class="sketch" src="${item.imagem}" >
+      <img class="sketch" src="${item.imagem}" alt="${item.titulo || ''}">
+      <div class="titulo-fita">${item.titulo || ""}</div>
 
-    <div class="cap">
-      <span>${item.titulo || ""}</span>
-    </div>
-
-    <div class="card">
-      <div class="fechar-card">X</div>
-      <div class="card-capa">${item.tag || ""}</div>
-
-      <div class="card-conteudo">
-        <div class="artes"></div>
-        <button class="adicionar">Adicionar arte</button>
+      <div class="card">
+        <div class="fechar-card">✕</div>
+        <div class="card-conteudo">
+          <div class="tag">${item.tag || ""}</div>
+          <div class="artes"></div>
+          <button class="adicionar">+ Adicionar Arte</button>
+        </div>
       </div>
-    </div>  
 
-    <button class="btn-apagar" data-id="${item.id}">Apagar</button>
+      <button class="btn-apagar">Apagar</button>
     `;
-    grid.prepend(article); 
+
+    grid.prepend(article);
 
     // Ativa interações no novo card
-    const cardInterno = article.querySelector(".card");
-
-    ativarCard(cardInterno);
-    ativarAdicionarArte(cardInterno);
+    ativarCard(article);
+    ativarAdicionarArte(article);
 
     // Ativa botão apagar no novo card
-    article.querySelector(".btn-apagar").addEventListener("click", () => {
+    article.querySelector(".btn-apagar").addEventListener("click", (e) => {
+      e.stopPropagation();
       apagarExposed(item.id, article);
     });
   }
 
-   // FORMULÁRIO – ADICIONAR NOVO EXPOSED
+  // ─── Formulário: adicionar novo exposed ───────────────────────────────────
   if (form) {
     form.addEventListener("submit", async e => {
       e.preventDefault();
@@ -171,11 +189,7 @@
         const resposta = await fetch("/exposed/adicionar", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ 
-            imagem,
-            titulo,
-            tag
-           })
+          body: JSON.stringify({ imagem, titulo, tag })
         });
 
         const novoItem = await resposta.json();

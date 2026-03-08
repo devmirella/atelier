@@ -43,23 +43,19 @@
         <article class="paper" data-id="{{ item.id }}"> 
 
           <img class="sketch" src="{{ item.imagem }}"> <!-- A imagem do esboço é inserida aqui, o caminho vem do JSON -->
-
-          <div class="cap">
-            <span>{{ item.titulo }}</span> <!-- Título do esboço, vindo do JSON (item.titulo) -->
-            <span class="tag">{{ item.tag }}</span> <!-- tag ou categoria do esboço, vindo do JSON (item.tag)-->
-          </div>
+          <div class="titulo-fita">{{ item.titulo }}</div>
 
           <div class="card">
             <div class="fechar-card">X</div>
-            <div class="card-capa">{{ item.titulo }}</div>
 
             <div class="card-conteudo">
+             <div class="tag">{{ item.tag }}</div>
              <div class="artes"></div>
              <button class="adicionar">Adicionar Arte</button>
             </div>
           </div>
 
-          <button class="btn-apagar" data-id="{{ item.id }}">Apagar</button>
+          <button class="btn-apagar" data-id="{{ item.id }}">Apagar</button> 
 
         </article>
       {% endfor %}  
@@ -74,6 +70,11 @@
     <button type="submit">Adicionar</button>
   </form>
 </div>
+
+  <!-- LIGHTBOX PARA EXPANDIR ARTE -->
+   <div id="lightboxArte" class="lightbox">
+    <img id="lightboxImg">
+   </div> 
 
 </body>
 </html>

@@ -6,7 +6,7 @@
 
   --paper: #f3f0ea;
   --paper-2: #ede7dd;
-  --ink: #000000;
+  --ink: #1a1a1a;
 
   --tape: rgba(255, 255, 255, 0.25);
   --tape-edge: rgba(120, 105, 80, 0.25);
@@ -102,18 +102,21 @@ body::before {
   margin: 18px 0 26px;
 }
 
-/* Grid de papers */
+/* GRID PRINCIPAL */
 .grid {
-  display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  gap: 18px;
-
-  flex: 1; /* empurra o formulário para baixo */
+  flex: 1;
 }
 
-/* Card paper */
+/* Grid dos cards exposed */
+.grid-exposed {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(105px, 1fr));
+  gap: 22px;
+  align-items: start; 
+}
+
+/* CARD PAPER (externo) */
 .paper {
-  grid-column: span 3;
   position: relative;
   background: rgba(255, 255, 255, 0.08);
   color: var(--ink);
@@ -121,7 +124,7 @@ body::before {
   -webkit-backdrop-filter: blur(3px);
   border-radius: 14px;
   box-shadow: var(--soft);
-  overflow: hidden;
+  /* REMOVIDO overflow:hidden — ele cortava o card ao abrir */
   padding: 12px;
   transition: box-shadow 0.2s ease, transform 0.2s ease;
 }
@@ -131,11 +134,11 @@ body::before {
   box-shadow: 0 24px 55px rgba(0, 0, 0, 0.45);
 }
 
-/* fita adesiva */
+/* fita adesiva decorativa */
 .paper::before {
   content: "";
   position: absolute;
-  top: 10px;
+  top: -10px;
   left: 50%;
   transform: translateX(-50%) rotate(-2deg);
   width: 86px;
@@ -148,106 +151,119 @@ body::before {
   z-index: 3;
 }
 
-/* Imagem do esboço */
+/* IMAGEM CAPA (sketch) */
 .sketch {
   width: 100%;
   aspect-ratio: 4 / 5;
   object-fit: cover;
   border-radius: 10px;
   display: block;
+  cursor: pointer;
 }
 
-.sketch {
+.sketch[src=""] {
   display: none;
 }
 
-.sketch[src] {
-  display: block;
+/* TÍTULO FITA */
+.titulo-fita {
+  position: absolute;
+  top: 2px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 4; /* fica sobre a fita (z-index 3) */
+
+  font-family: "Cormorant Garamond", serif;
+  font-size: 13px;
+  font-weight: 600;
+  text-align: center;
+  color: var(--text);
+  cursor: pointer;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+
+  pointer-events: none; /* não interfere no clique do botão apagar */
 }
 
-/* Legenda */
-.cap {
-  margin-top: 10px;
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-  font-size: 12px;
-  opacity: 0.85;
+.titulo-fita:hover {
+  opacity: 1;
 }
 
-.tag {
-  font-size: 11px;
-  padding: 6px 10px;
-  border-radius: 999px;
-  background: rgba(0, 0, 0, 0.06);
-}
-
-/* Variações de tamanho */
-.wide {
-  grid-column: span 6;
-}
-
-.tall .sketch {
-  aspect-ratio: 3 / 4;
-}
-
-.wide .sketch {
-  aspect-ratio: 16 / 10;
-}
-
-/* Card interno */
+/* CARD INTERNO (expande ao clicar) */
 .card {
-  background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(2px);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
   padding: 12px;
   position: relative;
-}
+  margin-top: 6px;
 
-.card-capa {
-  font-family: "Cormorant Garamond", serif;
-  font-size: 22px;
-  font-weight: 500;
-  text-align: center;
-  cursor: pointer;
-}
-
-.card-conteudo {
+  /* Estado fechado: oculto */
   display: none;
-  margin-top: 12px;
 }
 
-.card.aberto .card-conteudo {
+/* Quando o paper tem classe .aberto, o card interno aparece */
+.paper.aberto .card {
   display: block;
 }
 
+/* Botão fechar */
 .fechar-card {
   position: absolute;
-  top: 6px;
-  right: 10px;
+  top: 8px;
+  right: 12px;
   cursor: pointer;
   font-weight: bold;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.6);
+  transition: color 0.2s ease;
+  line-height: 1;
 }
 
-/* Artes adicionadas */
+.fechar-card:hover {
+  color: rgba(255, 255, 255, 1);
+}
+
+/* Conteúdo do card sempre visível quando card está aberto */
+.card-conteudo {
+  display: block;
+  margin-top: 8px;
+}
+
+/* TAG */
+.tag {
+  display: inline-block;
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.15);
+  color: var(--text);
+  letter-spacing: 0.5px;
+  margin-bottom: 10px;
+}
+
+/* ARTES INTERNAS */
 .artes {
   display: grid;
   gap: 10px;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  margin-bottom: 8px;
 }
 
 .arte {
-  height: 120px;
-  background: #ccc;
+  height: 100px;
+  background: rgba(255, 255, 255, 0.08);
   position: relative;
   overflow: hidden;
   cursor: pointer;
+  border-radius: 8px;
 }
 
 .arte img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  border-radius: 8px;
 }
 
 .arte:hover img {
@@ -256,10 +272,8 @@ body::before {
 
 .arte.expandida {
   grid-column: 1 / -1;
-
   height: auto;
   max-height: 450px;
-
   display: flex;
   justify-content: center;
   align-items: center;
@@ -268,10 +282,8 @@ body::before {
 .arte.expandida img {
   width: auto !important;
   height: auto !important;
-
   max-width: 100%;
   max-height: 450px;
-
   object-fit: contain;
 }
 
@@ -284,6 +296,7 @@ body::before {
   cursor: pointer;
   padding: 4px 7px;
   border-radius: 50%;
+  font-size: 11px;
   opacity: 0;
   transition: opacity 0.2s ease;
   z-index: 10;
@@ -293,48 +306,101 @@ body::before {
   opacity: 1;
 }
 
+/* BOTÃO ADICIONAR ARTE */
 .adicionar {
-  margin-top: 10px;
+  margin-top: 8px;
   width: 100%;
-  border: 1px dashed rgba(0, 0, 0, 0.3);
+  border: 1px dashed rgba(255, 255, 255, 0.3);
   background: none;
   padding: 8px;
   cursor: pointer;
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.6);
+  font-family: "Cormorant Garamond", serif;
+  font-size: 13px;
+  transition: all 0.2s ease;
 }
 
-/* Responsivo */
+.adicionar:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* BOTÃO APAGAR */
+.btn-apagar {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+
+  background: rgba(0, 0, 0, 0.5);
+  border: none;
+  border-radius: 20px;
+  padding: 4px 10px;
+  color: #fff;
+  font-size: 12px;
+  font-family: "Cormorant Garamond", serif;
+  cursor: pointer;
+
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  z-index: 10;
+}
+
+.paper:hover .btn-apagar {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* LIGHTBOX */
+.lightbox {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  z-index: 1000;
+  justify-content: center;
+  align-items: center;
+}
+
+.lightbox img {
+  max-width: 90vw;
+  max-height: 90vh;
+  border-radius: 10px;
+  object-fit: contain;
+}
+
+/*  RESPONSIVO */
 @media (max-width: 980px) {
-  .paper { grid-column: span 6; }
-  .wide { grid-column: span 12; }
+  .grid-exposed {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 @media (max-width: 620px) {
   .top { align-items: flex-start; }
   .titulo h1 { font-size: 38px; }
-  .paper { grid-column: span 12; }
+  .grid-exposed {
+    grid-template-columns: 1fr;
+  }
 }
 
-/* FORMULÁRIO DE ADIÇÃO – ESTILO ATELIER */
+/* FORMULÁRIO */
 .form-minimo {
-  margin-top: auto;
+  margin-top: 40px;
   margin-bottom: 40px;
-
   padding: 24px 28px;
   max-width: 420px;
-
   background-color: rgba(255,255,255,0.03);
   border: 1px solid rgba(255,255,255,0.08);
   border-radius: 14px;
-
   display: flex;
   flex-direction: column;
   gap: 16px;
-
   text-align: center;
   align-self: center;
 }
 
-/* INPUT */
 .form-minimo input {
   background: transparent;
   border: none;
@@ -351,7 +417,6 @@ body::before {
   font-style: italic;
 }
 
-/* BOTÃO */
 .form-minimo button {
   background: none;
   border: 1px solid rgba(255, 255, 255, 0.35);
@@ -367,39 +432,4 @@ body::before {
 
 .form-minimo button:hover {
   background-color: rgba(255, 255, 255, 0.08);
-}
-
-/* BOTÃO APAGAR – TEXTO ADAPTÁVEL */
-
-.paper {
-  position: relative;
-}
-
-.btn-apagar {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-
-  background: rgba(0, 0, 0, 0.5);
-  border: none;
-  border-radius: 20px;
-
-  padding: 4px 10px; /* permite que a palavra se ajuste */
-
-  color: #fff;
-  font-size: 12px;
-  font-family: "Cormorant Garamond", serif;
-
-  cursor: pointer;
-
-  opacity: 0;
-  pointer-events: none;
-
-  transition: opacity 0.2s ease;
-}
-
-/* aparece apenas no hover do card */
-.paper:hover .btn-apagar {
-  opacity: 1;
-  pointer-events: auto;
 }
