@@ -2,8 +2,19 @@ from flask import Flask, render_template, jsonify, request
 import json
 import os
 from pathlib import Path
+from werkzeug.utils import secure_filename # secure_filename → função do Flask que limpa o nome do arquivo
 
 app = Flask(__name__)
+
+# Configuração de UPLOAD
+UPLOAD_FOLDER = os.path.join("static", "images")
+ALLOWED_EXTENSIONS = {"jpg", "jpeg", "png", "gif", "webp"}
+app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER 
+
+# Função auxiliar: verificar extensão
+def extensao_permitida(nome_arquivo):
+    return "." in nome_arquivo and \
+    nome_arquivo.rsplit(".", 1)[-1].lower() in ALLOWED_EXTENSIONS
 
 @app.route("/")
 def index():
@@ -26,40 +37,46 @@ def arte():
 
 @app.route("/arte/adicionar", methods=["POST"])
 def adicionar_arte():
-    caminho = Path("data/arte.json") # Caminho relativo para o arquivo arte.json
+    caminho_json = Path("data/arte.json") # Caminho relativo para o arquivo arte.json
 
-    # Lê o corpo da requisição
-    dados = request.get_json()
-
-    # Validação básica
-    if not dados or "imagem" not in dados or dados["imagem"].strip() == "":
-        return jsonify({"erro": "URL da imagem é obrigatória"}), 400
+    if "imagem" not in request.files:
+        return jsonify({"erro": "Nenhum arquivo enviado"}), 400
     
-    # Garante que o arquivo existe
-    if not caminho.exists():
-        artes = []
-    else:
-        with open(caminho, encoding="utf-8") as f:
+    arquivo = request.files["imagem"] # pega o arquivo do dicionário, é um objeto FileStorage do Flask
+    if arquivo.filename == "":
+        return jsonify({"erro": "Nenhum arquivo selecionado"}), 400
+    
+    if not extensao_permitida(arquivo.filename):
+        return jsonify({"erro": "Tipo de arquivo não permitido"}), 400
+
+    nome_seguro = secure_filename(arquivo.filename) # Limpa o nome do arquivo
+    caminho_arquivo = os.path.join(app.config["UPLOAD_FOLDER"], nome_seguro)
+    arquivo.save(caminho_arquivo)
+
+    caminho_imagem = f"/static/images/{nome_seguro}"
+
+    if caminho_json.exists():
+        with open(caminho_json, encoding="utf-8") as f:
             artes = json.load(f)
 
-    # Gera novo ID
-    novo_id = 1
-    if artes:
-        novo_id = max(item["id"] for item in artes ) + 1
-
-    # Nova arte
+    else: # Se o arquivo JSON não existir crie um lista vazia
+        artes = []
+    
+    novo_id = 1 # Gerar um novo ID
+    if artes: 
+        novo_id = max(item["id"] for item in artes) + 1
+    
     nova_arte = {
         "id": novo_id,
-        "imagem": dados["imagem"]
+        "imagem": caminho_imagem # Agora salva o caminho local, não mais o URL externa 
     }
-
     artes.append(nova_arte)
 
-    # Salva no JSON
-    with open(caminho, "w", encoding="utf-8") as f: 
+    with open(caminho_json, "w", encoding="utf-8") as f:
         json.dump(artes, f, ensure_ascii=False, indent=2)
 
     return jsonify(nova_arte), 201
+
 
 @app.route("/arte/apagar", methods=["POST"])
 def apagar_arte():

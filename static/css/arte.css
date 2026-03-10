@@ -1,10 +1,11 @@
+/* RESET */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-/* Corpo da página */
+/* BODY / FUNDO */
 body {
     min-height: 100vh;
     font-family: Arial, Helvetica, sans-serif;
@@ -16,7 +17,7 @@ body {
     background-attachment: fixed;
 }
 
-/* Camada escura */
+/* CAMADA ESCURA */
 body::before {
     content: "";
     position: fixed;
@@ -25,6 +26,7 @@ body::before {
     z-index: -1;
 }
 
+/* CABEÇALHO */
 .topo {
     display: flex;
     align-items: center;
@@ -34,11 +36,13 @@ body::before {
     margin: 0 auto;
 }
 
+/* CABEÇALHO - TÍTULO */
 .topo h1 {
     font-family: 'Cormorant Garamond', serif;
     font-size: 36px;
 }
 
+/* BOTÃO VOLTAR */
 .voltar {
     border: 1px solid rgba(255,255,255,0.25);
     background: rgba(255,255,255,0.08);
@@ -48,17 +52,29 @@ body::before {
     cursor: pointer;
 }
 
+/* BOTÃO VOLTAR HOVER */
 .voltar:hover {
     background: rgba(255,255,255,0.12);
 }
 
+/* GALERIA */
 .galeria {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 30px;
-    padding: 40px;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); /* Cria colunas autoátocas, minimo 260px cada */
+    padding: 40px; /* Espaço interno nas bordas da galeria */
+    max-width: 1200px; /* Largura maxina - não estica além disso */
+    margin: 0 auto; /* Centraliza a galeria na página */
 }
 
+/* GALERIA */
+.grid-arte {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); /* Cria colunas autoátocas, minimo 260px cada */
+    gap: 24px;
+    width: 100%;
+
+}
+
+/* CARD */
 .arte {
     position: relative;
     background: rgba(255, 255, 255, 0.05);
@@ -66,12 +82,14 @@ body::before {
     border-radius: 8px;
 }
 
+/* CARD */
 .imagem {
     height: 160px;
     background: rgba(255, 255, 255, 0.15);
     border-radius: 4px;
 }
 
+/* ESTRELA DE FAVORITO */
 .estrela {
     position: absolute;
     top: 8px;
@@ -81,13 +99,12 @@ body::before {
     color: #d8c27a;
 }
 
-
-
 /* Garante que o card seja referência de posição */
 .arte {
     position: relative;
 }
-/* Botão apagar escondido por padrão */
+
+/* BOTÃO APAGAR ESCONDIDO POR PADRÃO */
 .btn-apagar {
     position: absolute;
     bottom: 10px;
@@ -112,27 +129,27 @@ body::before {
     transition: opacity 0.3s ease, background 0.3s ease;
 }
 
-/* Mostra o botão só ao passar o mouse no card */
+/* MOSTRA O BOTÃO APAGAR AO PASSAR O MOUSE SOBRE O CARD */
 .arte:hover .btn-apagar {
     opacity: 1;
     pointer-events: auto;
 }
 
-/* Efeito hover no botão */
+/* EFEITO HOVER DO BOTÃO APAGAR */
 .btn-apagar:hover {
     background: rgba(180, 30, 30, 0.95);
 }
 
-/* Ajusta a imagem dentro do card */
+/* GARANTE QUE A IMAGEM SEJA REDIMENSIONADA PARA COBRIR TODO O ESPAÇO DO CARD, SEM DISTORCER A PROPORÇÃO */
 .imagem img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     display: block;
-    object-fit: contain;
+    
 }
 
-/* Centraliza a imagem dentro do card */
+/* CENTRALIZAR A IMAGEM DENTRO DO CARD */
 .imagem {
     display: flex;
     align-items: center;    
@@ -171,6 +188,7 @@ body::before {
   outline: none;
 }
 
+/* PLACEHOLDER */
 .form-minimo input::placeholder {
   color: rgba(255, 255, 255, 0.4);
   font-style: italic;
@@ -192,6 +210,7 @@ body::before {
   transition: all 0.3s ease;
 }
 
+/* BOTÃO HOVER */
 .form-minimo button:hover {
   background-color: rgba(255, 255, 255, 0.08);
 }

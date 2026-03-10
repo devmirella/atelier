@@ -110,7 +110,7 @@ body::before {
 /* Grid dos cards exposed */
 .grid-exposed {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(105px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 22px;
   align-items: start; 
 }
@@ -433,3 +433,5 @@ body::before {
 .form-minimo button:hover {
   background-color: rgba(255, 255, 255, 0.08);
 }
+
+

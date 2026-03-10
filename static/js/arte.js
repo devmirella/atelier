@@ -85,43 +85,41 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // ADICIONAR ARTE (FORMULÁRIO)
-    const form = document.getElementById("formArte");
-    const inputImagem = document.getElementById("imagemArte");
-    const gridArte = document.querySelector(".grid-arte");
+    // ADICIONAR ARTE (FORMULÁRIO DE UPLOAD)
+    const form = document.getElementById("formArte"); // Pega o formulário
+    const inputImagem = document.getElementById("imagemArte"); // Pega o input de arquivo
+    const  gridArte = document.querySelector(".grid-arte") // Pega a grade de cards
 
     form.addEventListener("submit", async (event) => {
-        event.preventDefault();
+        event.preventDefault(); // Impede o formulário de recarregar a página
 
-        const imagem = inputImagem.value.trim();
+        const arquivo = inputImagem.files[0]; 
 
-        if (!imagem) {
-            alert("Informe a URL da imagem");
-            return;
+        if (!arquivo) {
+            alert("Selecione uma imagem");
+            return; // Para aqui se nenhum arquivo foi escolhido
         }
+        const formData = new FormData();
+        formData.append("imagem", arquivo)
 
         try {
-            const resposta = await fetch("/arte/adicionar", {
+            const resposta  = await fetch("/arte/adicionar", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ imagem })
+                body: formData
             });
-
-            const novaArte = await resposta.json();
-
+            const novaArte = await resposta.json(); // Recebe resposta do Flask
             if (!resposta.ok) {
-                throw new Error(novaArte.erro || "Erro ao adicionar");
+                throw new Error(novaArte.erro || "Erro ao adicionar"); 
             }
-
-            criarCardArte(novaArte);
-            inputImagem.value = "";
+            criarCardArte(novaArte);  // Cria o card na tela
+            form.reset();            //  Limpa o formulário
 
         } catch (erro) {
             console.error(erro);
             alert("Erro ao adicionar a arte");
         }
+        
     });
-
     // FUNÇÃO: CRIAR CARD DE ARTE NO DOM 
     function criarCardArte(arte) {
         const card = document.createElement("div");
