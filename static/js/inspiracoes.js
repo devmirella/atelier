@@ -37,51 +37,31 @@ document.addEventListener("DOMContentLoaded", () => {
     // Adiciona um ouvinte de evento ao botão
     // Esse código só roda quando o botão for clicado 
     botaoAdicionar.addEventListener("click", function () {
+        const arquivo = inputImagem.files[0];
 
-        // Pega o valor digitado no input
-        const imagemDigitada = inputImagem.value; 
-
-        // Verifica se o usuário não digitou nada
-        if (!imagemDigitada) {
-            mensagem.textContent = "Por favor, digite o nome da imagem,";
+        if (!arquivo) {
+            mensagem.textContent = "Por favor, Selecione uma imagem.";
             return;
         }
 
-        // Envia os dados para o backend usando fetch
+        const formData = new FormData();
+        formData.append("imagem", arquivo);
+
         fetch("/inspiracoes/adicionar", {
-
-            //Define que o método da requisição é POST
             method: "POST",
-
-            // Define que estamos enviando dados no formato JSON
-            headers: {
-                "Content-type": "application/json"
-            },
-            // Converte o objeto JavaScript em JSON
-            body: JSON.stringify({
-                imagem: imagemDigitada
-            })
+            body: formData
         })
-
+        .then(res => res.json())  // Quando o backend responder, converte a resposta para JSON
+        .then(data => {  // Quanddo o JSON estiver pronto, usamos os dados retornados
+            mensagem.textContent = data.mensagem; // Mostra mensagem enviada pelo backend na página
+            inputImagem.value = ""; 
+            location.reload();  // Recarrega a página para mostrar a nova inpiração adicionada
+        })
         
-        // Quando o backend responder, converte a resposta para JSON
-        .then(res => res.json())
-        // Quando o JSON estiver pronto, usamos os dados retornados
-        .then(data => {
-            // Mostra a mensagem enviada pelo backend na página
-            mensagem.textContent = data.mensagem;
-            // Limpa o campo de input após o envio
-            inputImagem.value = "";
-            // Recarrega a página para mostrar a nova inspiração adicionada
-            location.reload();
-        })
-        // Se ocorrer qualquer erro na requisição
         .catch(() => {
-            // Mostra mensagem de erro para o usuário
             mensagem.textContent = "Erro ao adicionar inspiração. Tente novamente.";
         });
     });
-
     
     // Apagar inspiração 
     // querySelectorAll retorna uma lista (NodeList)

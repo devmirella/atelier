@@ -68,7 +68,7 @@ def adicionar_arte():
     
     nova_arte = {
         "id": novo_id,
-        "imagem": caminho_imagem # Agora salva o caminho local, não mais o URL externa 
+        "imagem": caminho_imagem # Agora salva o caminho local, não mais a URL externa 
     }
     artes.append(nova_arte)
 
@@ -189,120 +189,83 @@ def apagar_exposed(): # Define a função Python que será chamada quando a rota
 
     return jsonify({"sucesso": True}), 200
 
-
-
 @app.route("/inspiracoes")
 def inspiracoes():
-    """
-    Esta rota agora Não cria inspirações no código.
-    Ela lê os dados de um arquivo JSON. 
-    """
-    # Caminho absoluto para o arquivo inspiracoes.json
-    caminho_json = os.path.join(
-        app.root_path,
-        "data",
-        "inspiracoes.json"
-    )
-    # Abre o arquivo JSON em modo leitura
-    with open(caminho_json, "r", encoding="utf-8") as arquivo:
-        inspiracoes = json.load(arquivo)
+    caminho_json = Path("data/inspiracoes.json")
 
-    # Envia a lista para o template inspiracoes.html
+    if caminho_json.exists():
+        with open(caminho_json, encoding="utf-8") as f:
+            inspiracoes = json.load(f)
+    else:
+        inspiracoes = []
+
     return render_template("inspiracoes.html", inspiracoes=inspiracoes)
+
 
 @app.route("/inspiracoes/adicionar", methods=["POST"])
 def adicionar_inspiracao():
-    """
-    Rota responsável por adicionar
-    uma nova inspiração ao JSON.
-    (ainda sem interface)
-    """
 
-    # Caminho do arquivo JSON
-    caminho_json = os.path.join(
-        app.root_path,
-        "data",
-        "inspiracoes.json"
-    )
-
-    # Dados recebidos no Post (JSON)
-    dados = request.get_json()
-
-    # Validação simples
-    if not dados or "imagem" not in dados:
-        return jsonify({
-            "erro": "Campo 'imagem' é obrigatório."
-        }), 400
+    caminho_json = Path("data/inspiracoes.json") 
+    if "imagem" not in request.files:
+        return jsonify({"erro": "Nenhum arquivo enviado"}), 400
     
-    # Abre o JSON atual
-    with open(caminho_json, "r", encoding="utf-8") as arquivo:
-        inspiracoes = json.load(arquivo)
+    arquivo = request.files["imagem"]
 
-    # Calcula o próximo ID
-    if inspiracoes:
-        ultimo_id = max(item["id"] for item in inspiracoes)
+    if arquivo.filename == "": 
+        return jsonify({"erro": "Nenhum arquivo selecionado"}), 400
+    
+    if not extensao_permitida(arquivo.filename): # Verifica se a extensão do arquivo é permitida (jpg, png, gif, webp...)
+        return jsonify({"erro": "Tipo de arquivo não permitido"}), 400 
+    
+    nome_seguro = secure_filename(arquivo.filename)
+
+    caminho_arquivo = os.path.join(app.config["UPLOAD_FOLDER"], nome_seguro)
+    arquivo.save(caminho_arquivo)
+    caminho_imagem = f"/static/images/{nome_seguro}" # Monta o caminho que será salvo no JSON e usado pelo HTML para exibir a imagem
+
+    if caminho_json.exists():
+        with open(caminho_json, encoding="utf-8") as f:
+            inspiracoes = json.load(f)
     else:
-        ultimo_id = 0
+        inspiracoes = [] 
 
-    novo_id = ultimo_id + 1   
+    novo_id = 1 
+    if inspiracoes:
+        novo_id = max(item["id"] for item in inspiracoes) + 1
 
-    # Adiciona a nova inspiração com id
-    inspiracoes.append({
-        "id": novo_id,
-        "imagem": dados["imagem"]
-    })
+    nova_inspiracao = {"id": novo_id, "imagem": caminho_imagem}
+    inspiracoes.append(nova_inspiracao)
 
-    # Salva de volta no arquivo JSON
-    with open(caminho_json, "w", encoding="utf-8") as arquivo:
-        json.dump(inspiracoes, arquivo, ensure_ascii=False, indent=2)
+    with open(caminho_json, "w", encoding="utf-8") as f:
+        json.dump(inspiracoes, f, ensure_ascii=False)
 
-    # Resposta simples de sucesso
-    return jsonify({
-        "mensagem": "Inspiração adicionada com sucesso!"
-    }), 201
+    return jsonify({"mensagem": "Inspiração adicionada!", "imagem": caminho_imagem}), 201
 
 @app.route("/inspiracoes/apagar", methods=["POST"])
 def apagar_inspiracao():
-    """
-    Rota responsável por apagar uma inspiração
-          existente pelo id
-    """
-    # Caminho do arquivo JSON
-    caminho_json = os.path.join(
-        app.root_path,
-        "data",
-        "inspiracoes.json"
-    )
-
-    # Dados recebidos no POST (JSON)
+    caminho_json = Path("data/inspiracoes.json")
     dados = request.get_json()
-    # Validação básica: precisa ter id 
+
     if not dados or "id" not in dados:
-        return jsonify({
-            "erro": "Campo 'id' é obrigatório."
-        }), 400
+        return jsonify({"erro": "Campo 'id' é obrigatório."}), 400
+    
     id_para_apagar = dados["id"]
 
-    # Abre o JSON atual
-    with open(caminho_json, "r", encoding="utf-8") as arquivo:
-        inspiracoes = json.load(arquivo)
-    # Filtra removendo apenas o item com o id fornecido
-    novas_inspiracoes = [
-        item for item in inspiracoes if item["id"] != id_para_apagar
-    ]
-    # Se nada foi removido, o id não existia
-    if len(novas_inspiracoes) == len(inspiracoes):
-        return jsonify({
-            "erro": "Inspiração não encontrada."
-        }), 404
-    # Salva o JSON atualizado
-    with open(caminho_json, "w", encoding="UTF-8") as arquivo:
-        json.dump(novas_inspiracoes, arquivo, ensure_ascii=False, indent=2)
+    if not caminho_json.exists():
+        return jsonify({"erro": "Arquivo não encontrado"}), 404
     
-    # Resposta de sucesso
-    return jsonify({
-        "mensagem": "Inspiração apagada com sucesso!"
-    }), 200
+    with open(caminho_json, encoding="utf-8") as f:
+        inspiracoes = json.load(f)
+
+    novas_inspiracoes = [item for item in inspiracoes if item["id"] != id_para_apagar]
+
+    if len(novas_inspiracoes) == len(inspiracoes):
+        return jsonify({"erro": "Inspiração não encontrada."}), 404
+    
+    with open(caminho_json, "w", encoding="utf-8") as f:
+        json.dump(novas_inspiracoes, f, ensure_ascii=False, indent=2)
+
+    return jsonify({"mensagem": "Inspiração apagada com sucesso!"}), 200
 
 #Execução do App
 if __name__ == "__main__":
