@@ -128,6 +128,7 @@ document.addEventListener("DOMContentLoaded", () => {
         .then(() => arte.remove())
         .catch(() => alert("Erro ao apagar arte"));
       }
+      
       return;
     }
 
