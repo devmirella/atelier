@@ -43,36 +43,90 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // ─── Ativar botão "ADICIONAR ARTE" ───────────────────────────────────────
   function ativarAdicionarArte(paper) {
+    
     const botao = paper.querySelector(".adicionar");
     if (!botao) return;
-
+    
     botao.addEventListener("click", e => {
       e.stopPropagation();
 
-      const url = prompt("Cole a URL da arte:");
-      if (!url || !url.trim()) return;
+      const input = document.createElement("input");  
+      input.type = "file";
+      input.accept = "image/*";
 
-      const artes = paper.querySelector(".artes");
-      const arte = document.createElement("div");
-      arte.className = "arte";
+      input.click(); // Abre o seletor de arquivos do computador automaticamente
+      input.addEventListener("change", async () => {
 
-      arte.innerHTML = `
-        <span class="fechar-arte">✕</span>
-        <img src="${url.trim()}" alt="arte">
-      `;
-      artes.appendChild(arte);
+        const arquivo = input.files[0];
+
+        if (!arquivo) return;
+
+        const id = paper.dataset.id;
+        const formData = new FormData();
+        formData.append("imagem", arquivo);
+        formData.append("id", id);
+
+        try {
+          const resposta = await fetch("/exposed/adicionar-arte", {
+            method: "POST",
+            body: formData 
+          });
+
+          const resultado = await resposta.json();
+
+          if (!resposta.ok) {
+            throw new Error(resultado.erro || "Erro ao adicionar arte");
+          }
+          if(!resultado.imagem) {
+            throw new Error("Imagem não retornada pelo servidor");
+          }
+          
+          const artes = paper.querySelector(".artes");
+          const arte = document.createElement("div");
+          arte.className = "arte";
+
+          arte.innerHTML =  `
+              <span class="fechar-arte">✕</span>
+              <img src="${resultado.imagem}" alt="arte">
+              `;
+
+          artes.appendChild(arte);
+        } catch (erro) {
+            console.error(erro);
+            alert("Erro ao adicionar arte")
+        }
+      });
     });
   }
 
   // ─── Controle de artes internas (remover + lightbox) ─────────────────────
   document.addEventListener("click", e => {
 
-    // Remover arte
+    // Remover arte - escuta clique no botão X dento de cada arte
     if (e.target.classList.contains("fechar-arte")) {
+      
+      // Impede que o clique propague para elementos pai
       e.stopPropagation();
+
+      // Pega o elemento .arte mais próximo do botão clicado
       const arte = e.target.closest(".arte");
+
       if (arte && confirm("Deseja remover esta arte?")) {
-        arte.remove();
+        
+        const paper = arte.closest(".paper");
+        const id_card = Number(paper.dataset.id);
+        const caminho = arte.querySelector("img").getAttribute("src");
+
+        fetch("/exposed/apagar-arte", {
+          method: "POST", 
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ id_card, caminho })
+
+        })
+        // Quando o backend confirmar o sucesso, converte a resposta
+        .then(res => res.json())
+        .then(() => arte.remove())
+        .catch(() => alert("Erro ao apagar arte"));
       }
       return;
     }
@@ -172,40 +226,48 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // ─── Formulário: adicionar novo exposed ───────────────────────────────────
-  if (form) {
+  if (form) {   
     form.addEventListener("submit", async e => {
       e.preventDefault();
 
       const titulo = inputTitulo.value.trim();
-      const imagem = inputImagem.value.trim();
+      const arquivo = inputImagem.files[0];
       const tag = inputTag.value.trim();
 
-      if (!imagem) {
-        alert("Informe a URL da imagem");
+      if (!arquivo) {
+        alert("Selecione uma imagem");
         return;
       }
+      const formData = new FormData();
+      formData.append("imagem", arquivo);
+
+      // Adiciona título e tag ao mesmo envelope
+      formData.append("titulo", titulo);
+      formData.append("tag", tag);
 
       try {
+
         const resposta = await fetch("/exposed/adicionar", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ imagem, titulo, tag })
+          body: formData
         });
-
+        
+        // Converte a resposta para JSON
         const novoItem = await resposta.json();
 
-        if (!resposta.ok) {
+        if (!resposta.ok) { 
           throw new Error(novoItem.erro || "Erro ao adicionar");
         }
 
+        // Cria card no DOM com os dados retornados pelo backend
         criarCardExposed(novoItem);
         form.reset();
 
-      } catch (erro) {
-        console.error(erro);
-        alert("Erro ao adicionar item no Exposed");
-      }
-    });
-  }
+    } catch (erro) {
+      console.error(erro);
+      alert("Erro ao adicionar item Exposed");
+    }
+  });
+}
 
 });

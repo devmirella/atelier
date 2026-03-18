@@ -50,7 +50,14 @@
 
             <div class="card-conteudo">
              <div class="tag">{{ item.tag }}</div>
-             <div class="artes"></div>
+             <div class="artes">
+                {% for arte in item.artes %}
+                  <div class="arte">
+                    <span class="fechar-arte">X</span>
+                    <img src="{{ arte }}" alt="arte">
+                  </div>
+                {% endfor %}
+             </div>
              <button class="adicionar">Adicionar Arte</button>
             </div>
           </div>
@@ -66,7 +73,7 @@
     <input 
       type="text" id="tituloExposed" placeholder="Título do esboço" required>
     <input type="text" id="tagExposed" placeholder="Tag ou categoria" required>
-    <input type="url" id="imagemExposed" placeholder="URL da imagem" required>
+    <input type="file" id="imagemExposed" accept="image/*" required>
     <button type="submit">Adicionar</button>
   </form>
 </div>

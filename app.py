@@ -125,37 +125,51 @@ def exposed():
 
 @app.route("/exposed/adicionar", methods=["POST"])
 def adicionar_exposed():
-    # Define o caminho do arquivo JSON onde as artes do exposed são salvas
     caminho = Path("data/exposed.json")
 
-    dados = request.get_json()
-    if not dados or "imagem" not in dados or dados["imagem"].strip() == "":
-        return jsonify({"erro": "URL da imagem é obrigatoria"}), 400
+    if "imagem" not in request.files:
+        return jsonify({"erro": "Nenhum arquivo enviado"}), 400
     
-    # Verifica se o arquivo exposed.json já existe
+    arquivo = request.files["imagem"]
+
+    if arquivo.filename == "":
+        return jsonify({"erro": "Nenhum arquivo selecionado"}), 400
+    
+    if not extensao_permitida(arquivo.filename):
+        return jsonify({"erro": "Tipo de arquivo não permitido"}), 400
+    
+    nome_seguro = secure_filename(arquivo.filename)
+
+    caminho_arquivo = os.path.join(app.config["UPLOAD_FOLDER"], nome_seguro)
+    arquivo.save(caminho_arquivo)
+    caminho_imagem = f"/static/images/{nome_seguro}"
+    titulo = request.form.get("titulo", "")
+    tag = request.form.get("tag", "")
+
     if caminho.exists():
         with open(caminho, encoding="utf-8") as f:
             exposed = json.load(f)
     else:
-        # Se não existir, inicia uma lista vazia
         exposed = []
+
     novo_id = 1
     if exposed:
         novo_id = max(item["id"] for item in exposed) + 1
-    # Cria um novo item que será salvo no JSON
+
     novo_item = {
         "id": novo_id,
-        "imagem": dados["imagem"],
-        "titulo": dados.get("titulo", ""),
-        "tag": dados.get("tag", "")
+        "imagem": caminho_imagem,
+        "titulo": titulo,
+        "tag": tag,
+        "artes": []
     }
-    # Adicionar o novo item á lista existente
+
     exposed.append(novo_item)
-    # Abre o arquivo JSON em modo escrita
     with open(caminho, "w", encoding="utf-8") as f:
-        json.dump(exposed, f, ensure_ascii=False, indent=2) #  # indent=2 deixa o JSON legível
-    # Retorna o item criado como resposta JSON
+        json.dump(exposed, f, ensure_ascii=False, indent=2)
+
     return jsonify(novo_item), 201
+
 
 @app.route("/exposed/apagar", methods=["POST"])
 def apagar_exposed(): # Define a função Python que será chamada quando a rota for acessada.
@@ -189,6 +203,79 @@ def apagar_exposed(): # Define a função Python que será chamada quando a rota
 
     return jsonify({"sucesso": True}), 200
 
+@app.route("/exposed/adicionar-arte", methods=["POST"])
+def adicionar_arte_exposed():
+
+    caminho = Path("data/exposed.json")
+    id_card = request.form.get("id") # Pega o id do card pai enviado pelo JS via FormData
+    if not id_card:
+        return jsonify({"erro": "ID do card é obrigatório"}), 400
+    
+    if "imagem" not in request.files:
+        return jsonify({"erro": "Nenhum arquivo enviado"}), 400
+    
+    arquivo = request.files["imagem"]
+    if arquivo.filename == "":
+        return jsonify({"erro": "Nenhum arquivo selecionado"}), 400
+    
+    if not extensao_permitida(arquivo.filename):
+        return jsonify({"erro": "Tipo de arquivo não permitido"}), 400
+    
+    nome_seguro = secure_filename(arquivo.filename)
+    caminho_arquivo = os.path.join(app.config["UPLOAD_FOLDER"], nome_seguro)
+    arquivo.save(caminho_arquivo)
+
+    caminho_imagem = f"/static/images/{nome_seguro}"
+    with open(caminho, encoding="utf-8") as f:
+        exposed = json.load(f)
+    
+    # Encontra o card pelo id e adiciona a arte na lista de artes
+    for item in exposed:
+        if item["id"] == int(id_card): 
+            # Se o card ainda não tem lista de artes, cria uma vazia
+            if "artes" not in item:
+                item["artes"] = []
+            # Adiciona o caminho da nova arte na lista
+            item["artes"].append(caminho_imagem)
+            break
+
+    with open(caminho, "w", encoding="utf-8") as f:
+        json.dump(exposed, f, ensure_ascii=False, indent=2)
+
+    return jsonify({"imagem": caminho_imagem}), 201
+
+
+@app.route("/exposed/apagar-arte", methods=["POST"])
+def apagar_arte_interna():
+
+    caminho = Path("data/exposed.json")
+
+    dados = request.get_json()
+
+    if not dados or "id_card" not in dados or "caminho" not in dados:
+        return jsonify({"erro": "id_card e caminho são obrigatórios"}), 400
+    
+    # Pega o id do card e caminho da imagem a ser removida
+    id_card = dados["id_card"]
+    caminho_arte = dados["caminho"]
+
+    with open(caminho, encoding="utf-8") as f:
+        exposed = json.load(f)
+
+    # Encontra o card pleo id e remove a arte da lista
+    for item in exposed:
+        if item["id"] == id_card:
+            if "artes" in item:
+                # Filtra mantendo todas as artes Exceto a que tem o caminho informado
+                item["artes"] = [a for a in item["artes"] if a != caminho_arte]
+                break 
+    
+    with open(caminho, "w", encoding="utf-8") as f:
+        json.dump(exposed, f, ensure_ascii=False, indent=2)
+    
+    return jsonify({"sucesso": True}), 200
+
+
 @app.route("/inspiracoes")
 def inspiracoes():
     caminho_json = Path("data/inspiracoes.json")
@@ -200,7 +287,7 @@ def inspiracoes():
         inspiracoes = []
 
     return render_template("inspiracoes.html", inspiracoes=inspiracoes)
-
+    
 
 @app.route("/inspiracoes/adicionar", methods=["POST"])
 def adicionar_inspiracao():
