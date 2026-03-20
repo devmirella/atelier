@@ -1,1 +1,18 @@
-[]
+[
+  {
+    "id": 1,
+    "imagem": "/static/images/IMG_3343_2.jpeg",
+    "titulo": "ROSTO",
+    "tag": "FRENTE",
+    "artes": [
+      "/static/images/IMG_3177.jpeg"
+    ]
+  },
+  {
+    "id": 2,
+    "imagem": "/static/images/IMG_4016.jpg",
+    "titulo": "ROSTO",
+    "tag": "FRENTE",
+    "artes": []
+  }
+]

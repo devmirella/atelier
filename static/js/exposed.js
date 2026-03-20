@@ -13,10 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const lightbox = document.getElementById("lightboxArte");
   const lightboxImg = document.getElementById("lightboxImg");
 
-  // ─── Ativar abertura/fechamento do card ───────────────────────────────────
-  // O clique agora fica no .paper (article) inteiro.
-  // Abre ao clicar no .titulo-fita ou no .sketch.
-  // Fecha ao clicar no .fechar-card.
+  // Ativar abertura/fechamento do card 
   function ativarCard(paper) {
     paper.addEventListener("click", e => {
 
@@ -41,7 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // ─── Ativar botão "ADICIONAR ARTE" ───────────────────────────────────────
+  //  Ativar botão "ADICIONAR ARTE" 
   function ativarAdicionarArte(paper) {
     
     const botao = paper.querySelector(".adicionar");
@@ -99,7 +96,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // ─── Controle de artes internas (remover + lightbox) ─────────────────────
+  //  Controle de artes internas (remover + lightbox) 
   document.addEventListener("click", e => {
 
     // Remover arte - escuta clique no botão X dento de cada arte
@@ -140,7 +137,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // ─── Fechar lightbox ──────────────────────────────────────────────────────
+  // Fechar lightbox
   if (lightbox) {
     lightbox.addEventListener("click", () => {
       lightbox.style.display = "none";
@@ -152,13 +149,13 @@ document.addEventListener("DOMContentLoaded", () => {
     lightboxImg.addEventListener("click", e => e.stopPropagation());
   }
 
-  // ─── Ativar cards já existentes no HTML ───────────────────────────────────
+  // Ativar cards já existentes no HTML 
   document.querySelectorAll(".paper").forEach(paper => {
     ativarCard(paper);
     ativarAdicionarArte(paper);
   });
 
-  // ─── Apagar item ──────────────────────────────────────────────────────────
+  //  Apagar item 
   async function apagarExposed(id, elemento) {
     if (!confirm("Deseja realmente apagar este item?")) return;
 
@@ -191,7 +188,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // ─── Criar card no DOM ────────────────────────────────────────────────────
+  // Criar card no DOM 
   function criarCardExposed(item) {
     const article = document.createElement("article");
     article.className = "paper";
@@ -226,7 +223,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // ─── Formulário: adicionar novo exposed ───────────────────────────────────
+  // Formulário: adicionar novo exposed 
   if (form) {   
     form.addEventListener("submit", async e => {
       e.preventDefault();

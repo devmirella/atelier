@@ -3,6 +3,9 @@ import json
 import os
 from pathlib import Path
 from werkzeug.utils import secure_filename # secure_filename → função do Flask que limpa o nome do arquivo
+from extensoes import db
+from models import Inspiracao, Arte, Exposed, ArteInterna
+
 
 app = Flask(__name__)
 
@@ -10,6 +13,19 @@ app = Flask(__name__)
 UPLOAD_FOLDER = os.path.join("static", "images")
 ALLOWED_EXTENSIONS = {"jpg", "jpeg", "png", "gif", "webp"}
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER 
+
+
+# Configuração do banco de dados 
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///atelier.db"
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
+# Inicializa o banco de dados com o app
+db.init_app(app)
+
+# Cria as tabelas no banco se ainda não existem
+with app.app_context():
+    db.create_all()
+
 
 # Função auxiliar: verificar extensão
 def extensao_permitida(nome_arquivo):
@@ -26,23 +42,22 @@ def home():
 
 @app.route("/arte")
 def arte():
-    caminho = Path("data/arte.json")
+    
+    # Busca todas as artes no banco de dados
+    artes = Arte.query.all()
+    lista = [{"id": a.id, "imagem": a.imagem} for a in artes]
 
-    if caminho.exists():
-        with open(caminho, encoding="utf-8") as f:
-            artes = json.load(f)
-    else: 
-        artes = []
-    return render_template("arte.html", artes=artes)
+    return render_template("arte.html", artes=lista)
+
 
 @app.route("/arte/adicionar", methods=["POST"])
 def adicionar_arte():
-    caminho_json = Path("data/arte.json") # Caminho relativo para o arquivo arte.json
-
+   
     if "imagem" not in request.files:
         return jsonify({"erro": "Nenhum arquivo enviado"}), 400
     
     arquivo = request.files["imagem"] # pega o arquivo do dicionário, é um objeto FileStorage do Flask
+    
     if arquivo.filename == "":
         return jsonify({"erro": "Nenhum arquivo selecionado"}), 400
     
@@ -52,80 +67,57 @@ def adicionar_arte():
     nome_seguro = secure_filename(arquivo.filename) # Limpa o nome do arquivo
     caminho_arquivo = os.path.join(app.config["UPLOAD_FOLDER"], nome_seguro)
     arquivo.save(caminho_arquivo)
-
     caminho_imagem = f"/static/images/{nome_seguro}"
 
-    if caminho_json.exists():
-        with open(caminho_json, encoding="utf-8") as f:
-            artes = json.load(f)
+    # Cria um novo objeto arte e salva no banco
+    nova = Arte(imagem=caminho_imagem)
+    db.session.add(nova)
+    db.session.commit()
 
-    else: # Se o arquivo JSON não existir crie um lista vazia
-        artes = []
-    
-    novo_id = 1 # Gerar um novo ID
-    if artes: 
-        novo_id = max(item["id"] for item in artes) + 1
-    
-    nova_arte = {
-        "id": novo_id,
-        "imagem": caminho_imagem # Agora salva o caminho local, não mais a URL externa 
-    }
-    artes.append(nova_arte)
-
-    with open(caminho_json, "w", encoding="utf-8") as f:
-        json.dump(artes, f, ensure_ascii=False, indent=2)
-
-    return jsonify(nova_arte), 201
-
+    return jsonify({"id": nova.id, "imagem": nova.imagem}), 201
 
 @app.route("/arte/apagar", methods=["POST"])
 def apagar_arte():
-    caminho = Path("data/arte.json")
-
+   
     dados = request.get_json()
 
-    # Validação básica 
     if not dados or "id" not in dados:
         return jsonify({"erro": "ID é obrigatório"}), 400
-    
-    id_para_apagar = dados["id"]
 
-    # Se o arquivo não existir, não há o que apagar
-    if not caminho.exists():
-        return jsonify({"erro": "Arquivo de arte não encontrado"}), 404
-    
-    # Lê o JSON 
-    with open(caminho, encoding="utf-8") as f:
-        artes = json.load(f)
+    # Busca a arte no banco pelo id
+    arte = Arte.query.get(dados["id"])
 
-    # Filtra removendo apenas o ID informado
-    artes_filtradas = [arte for arte in artes if arte["id"] != id_para_apagar]
-
-    # Se nada mudou, o ID não existia
-    if len(artes) == len(artes_filtradas):
+    if not arte:
         return jsonify({"erro": "Arte não encontrada"}), 404
     
-    # Salva o JSON atualizado
-    with open(caminho, "w", encoding="utf-8") as f:
-        json.dump(artes_filtradas, f, ensure_ascii=False, indent=2)
+    db.session.delete(arte)
+    db.session.commit()
 
+    # Retorna sucesso como true e status 200 (requisição OK)
     return jsonify({"sucesso": True}), 200
+
 
 @app.route("/exposed")
 def exposed():
-    caminho = Path("data/exposed.json")
 
-    if caminho.exists():
-        with open(caminho, encoding="utf-8") as f:
-            exposed = json.load(f)
-    else:
-        exposed = []
+    itens = Exposed.query.all()
 
-    return render_template("exposed.html", exposed=exposed)
+    # Converte para dicionário incluindo as artes internas
+    lista = []
+    for item in itens:
+        lista.append({
+            "id": item.id, 
+            "imagem": item.imagem,
+            "titulo": item.titulo,
+            "tag": item.tag,
+            "artes": [a.imagem for a in item.artes]        
+        })
+
+    return render_template("exposed.html", exposed=lista)
 
 @app.route("/exposed/adicionar", methods=["POST"])
 def adicionar_exposed():
-    caminho = Path("data/exposed.json")
+    
 
     if "imagem" not in request.files:
         return jsonify({"erro": "Nenhum arquivo enviado"}), 400
@@ -139,75 +131,52 @@ def adicionar_exposed():
         return jsonify({"erro": "Tipo de arquivo não permitido"}), 400
     
     nome_seguro = secure_filename(arquivo.filename)
-
     caminho_arquivo = os.path.join(app.config["UPLOAD_FOLDER"], nome_seguro)
     arquivo.save(caminho_arquivo)
     caminho_imagem = f"/static/images/{nome_seguro}"
+
     titulo = request.form.get("titulo", "")
     tag = request.form.get("tag", "")
 
-    if caminho.exists():
-        with open(caminho, encoding="utf-8") as f:
-            exposed = json.load(f)
-    else:
-        exposed = []
+    # Cria novo card do exposed no banco
+    novo = Exposed(imagem=caminho_imagem, titulo=titulo, tag=tag)
+    db.session.add(novo)
+    db.session.commit()
 
-    novo_id = 1
-    if exposed:
-        novo_id = max(item["id"] for item in exposed) + 1
-
-    novo_item = {
-        "id": novo_id,
-        "imagem": caminho_imagem,
-        "titulo": titulo,
-        "tag": tag,
+    return jsonify({
+        "id": novo.id,
+        "imagem": novo.imagem,
+        "titulo": novo.titulo,
+        "tag": novo.tag,
         "artes": []
-    }
+    }), 201
 
-    exposed.append(novo_item)
-    with open(caminho, "w", encoding="utf-8") as f:
-        json.dump(exposed, f, ensure_ascii=False, indent=2)
-
-    return jsonify(novo_item), 201
 
 
 @app.route("/exposed/apagar", methods=["POST"])
 def apagar_exposed(): # Define a função Python que será chamada quando a rota for acessada.
 
-    caminho = Path("data/exposed.json") 
     dados = request.get_json()
 
     # Validação básica
     if not dados or "id" not in dados:
         return jsonify({"erro": "ID é obrigatório"}), 400
-    id_para_apagar = dados["id"]
-
-    # Se o arquivo não existir
-    if not caminho.exists():
-        return jsonify({"erro": "Arquivo não encontrado"}), 404
     
-    # Lê o JSON
-    with open(caminho, encoding="utf-8") as f:
-        exposed = json.load(f)
+    item = Exposed.query.get(dados["id"])
 
-    # Remove item com o id informado
-    novos_items = [item for item in exposed if item["id"] != id_para_apagar]
-
-    # Se nada foi removido 
-    if len(novos_items) == len(exposed):
+    if not item:
         return jsonify({"erro": "Item não encontrado"}), 404
     
-    # Salva o JSON atualizado
-    with open(caminho, "w", encoding="utf-8") as f:
-        json.dump(novos_items, f, ensure_ascii=False, indent=2)
+    db.session.delete(item)
+    db.session.commit()
 
     return jsonify({"sucesso": True}), 200
 
 @app.route("/exposed/adicionar-arte", methods=["POST"])
 def adicionar_arte_exposed():
 
-    caminho = Path("data/exposed.json")
-    id_card = request.form.get("id") # Pega o id do card pai enviado pelo JS via FormData
+    
+    id_card = request.form.get("id") 
     if not id_card:
         return jsonify({"erro": "ID do card é obrigatório"}), 400
     
@@ -215,6 +184,7 @@ def adicionar_arte_exposed():
         return jsonify({"erro": "Nenhum arquivo enviado"}), 400
     
     arquivo = request.files["imagem"]
+
     if arquivo.filename == "":
         return jsonify({"erro": "Nenhum arquivo selecionado"}), 400
     
@@ -224,23 +194,18 @@ def adicionar_arte_exposed():
     nome_seguro = secure_filename(arquivo.filename)
     caminho_arquivo = os.path.join(app.config["UPLOAD_FOLDER"], nome_seguro)
     arquivo.save(caminho_arquivo)
-
     caminho_imagem = f"/static/images/{nome_seguro}"
-    with open(caminho, encoding="utf-8") as f:
-        exposed = json.load(f)
-    
-    # Encontra o card pelo id e adiciona a arte na lista de artes
-    for item in exposed:
-        if item["id"] == int(id_card): 
-            # Se o card ainda não tem lista de artes, cria uma vazia
-            if "artes" not in item:
-                item["artes"] = []
-            # Adiciona o caminho da nova arte na lista
-            item["artes"].append(caminho_imagem)
-            break
 
-    with open(caminho, "w", encoding="utf-8") as f:
-        json.dump(exposed, f, ensure_ascii=False, indent=2)
+    # Busca o card pai no banco
+    card = Exposed.query.get(int(id_card))
+    
+    if not card:
+        return jsonify({"erro": "Card não encontrado"}), 404
+    
+    # Cria nova arte interna ligada ao card
+    nova_arte = ArteInterna(imagem=caminho_imagem, exposed_id=card.id)
+    db.session.add(nova_arte)
+    db.session.commit()
 
     return jsonify({"imagem": caminho_imagem}), 201
 
@@ -248,110 +213,89 @@ def adicionar_arte_exposed():
 @app.route("/exposed/apagar-arte", methods=["POST"])
 def apagar_arte_interna():
 
-    caminho = Path("data/exposed.json")
-
     dados = request.get_json()
 
     if not dados or "id_card" not in dados or "caminho" not in dados:
         return jsonify({"erro": "id_card e caminho são obrigatórios"}), 400
     
-    # Pega o id do card e caminho da imagem a ser removida
-    id_card = dados["id_card"]
-    caminho_arte = dados["caminho"]
+    # Busca arte interna pelo caminho e id do card
+    arte = ArteInterna.query.filter_by(
+        exposed_id=dados["id_card"],
+        imagem=dados["caminho"]
+    ).first()
 
-    with open(caminho, encoding="utf-8") as f:
-        exposed = json.load(f)
-
-    # Encontra o card pleo id e remove a arte da lista
-    for item in exposed:
-        if item["id"] == id_card:
-            if "artes" in item:
-                # Filtra mantendo todas as artes Exceto a que tem o caminho informado
-                item["artes"] = [a for a in item["artes"] if a != caminho_arte]
-                break 
+    if not arte:
+        return jsonify({"erro": "Arte não encontrada"}), 404
     
-    with open(caminho, "w", encoding="utf-8") as f:
-        json.dump(exposed, f, ensure_ascii=False, indent=2)
+    db.session.delete(arte)
+    db.session.commit()
     
     return jsonify({"sucesso": True}), 200
 
 
 @app.route("/inspiracoes")
 def inspiracoes():
-    caminho_json = Path("data/inspiracoes.json")
+    # Busca todas as informações no banco de dados de uma vez
+    inspiracoes = Inspiracao.query.all()
 
-    if caminho_json.exists():
-        with open(caminho_json, encoding="utf-8") as f:
-            inspiracoes = json.load(f)
-    else:
-        inspiracoes = []
+    # ORM retorna objetos → convertendo para dicionários para o Jinja usar
+    lista = [{"id": i.id, "imagem": i.imagem} for i in inspiracoes]
 
-    return render_template("inspiracoes.html", inspiracoes=inspiracoes)
-    
+    # Envia a lista para template inspiracoes.html
+    return render_template("inspiracoes.html", inspiracoes=lista)
+
 
 @app.route("/inspiracoes/adicionar", methods=["POST"])
 def adicionar_inspiracao():
 
-    caminho_json = Path("data/inspiracoes.json") 
+    # Verifica se o arquivo foi enviado na requisição
     if "imagem" not in request.files:
         return jsonify({"erro": "Nenhum arquivo enviado"}), 400
     
     arquivo = request.files["imagem"]
 
-    if arquivo.filename == "": 
+    if arquivo.filename == "":
         return jsonify({"erro": "Nenhum arquivo selecionado"}), 400
     
-    if not extensao_permitida(arquivo.filename): # Verifica se a extensão do arquivo é permitida (jpg, png, gif, webp...)
-        return jsonify({"erro": "Tipo de arquivo não permitido"}), 400 
+    if not extensao_permitida(arquivo.filename):
+        return jsonify({"erro": "Tipo de arquivo não permitido"}), 400
     
     nome_seguro = secure_filename(arquivo.filename)
 
     caminho_arquivo = os.path.join(app.config["UPLOAD_FOLDER"], nome_seguro)
     arquivo.save(caminho_arquivo)
-    caminho_imagem = f"/static/images/{nome_seguro}" # Monta o caminho que será salvo no JSON e usado pelo HTML para exibir a imagem
 
-    if caminho_json.exists():
-        with open(caminho_json, encoding="utf-8") as f:
-            inspiracoes = json.load(f)
-    else:
-        inspiracoes = [] 
+    # Monta o caminho que será salvo no banco
+    caminho_imagem = f"/static/images/{nome_seguro}"
 
-    novo_id = 1 
-    if inspiracoes:
-        novo_id = max(item["id"] for item in inspiracoes) + 1
+    # Cria um novo objeto Inspiracao com o caminho salvo
+    nova = Inspiracao(imagem=caminho_imagem)
 
-    nova_inspiracao = {"id": novo_id, "imagem": caminho_imagem}
-    inspiracoes.append(nova_inspiracao)
-
-    with open(caminho_json, "w", encoding="utf-8") as f:
-        json.dump(inspiracoes, f, ensure_ascii=False)
+    db.session.add(nova)  # Adiciona o objeto na sessão para salvar
+    db.session.commit()   # salva no banco de verdade
 
     return jsonify({"mensagem": "Inspiração adicionada!", "imagem": caminho_imagem}), 201
 
+
 @app.route("/inspiracoes/apagar", methods=["POST"])
 def apagar_inspiracao():
-    caminho_json = Path("data/inspiracoes.json")
+    
+    # Recebe os dados enviados pelo JS em formato JSON
     dados = request.get_json()
 
     if not dados or "id" not in dados:
         return jsonify({"erro": "Campo 'id' é obrigatório."}), 400
     
-    id_para_apagar = dados["id"]
+    # Busca inspiração no banco pelo id
+    inspiracao = Inspiracao.query.get(dados["id"])
 
-    if not caminho_json.exists():
-        return jsonify({"erro": "Arquivo não encontrado"}), 404
-    
-    with open(caminho_json, encoding="utf-8") as f:
-        inspiracoes = json.load(f)
-
-    novas_inspiracoes = [item for item in inspiracoes if item["id"] != id_para_apagar]
-
-    if len(novas_inspiracoes) == len(inspiracoes):
+    if not inspiracao:
         return jsonify({"erro": "Inspiração não encontrada."}), 404
-    
-    with open(caminho_json, "w", encoding="utf-8") as f:
-        json.dump(novas_inspiracoes, f, ensure_ascii=False, indent=2)
 
+    db.session.delete(inspiracao)
+    db.session.commit()
+    
+    
     return jsonify({"mensagem": "Inspiração apagada com sucesso!"}), 200
 
 #Execução do App
