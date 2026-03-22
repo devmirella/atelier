@@ -1,10 +1,10 @@
-from flask import Flask, render_template, jsonify, request
-import json
+from flask import Flask, render_template, jsonify, request, redirect, url_for
 import os
-from pathlib import Path
 from werkzeug.utils import secure_filename # secure_filename → função do Flask que limpa o nome do arquivo
-from extensoes import db
-from models import Inspiracao, Arte, Exposed, ArteInterna
+from werkzeug.security import generate_password_hash, check_password_hash
+from flask_login import login_user, logout_user, login_required, current_user
+from extensoes import db, login_manager
+from models import Inspiracao, Arte, Exposed, ArteInterna, Usuario
 
 
 app = Flask(__name__)
@@ -18,9 +18,18 @@ app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 # Configuração do banco de dados 
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///atelier.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+app.config["SECRET_KEY"] = "atelier_secret_key"
 
 # Inicializa o banco de dados com o app
-db.init_app(app)
+db.init_app(app) # Conecta o banco de dados ao app Flask
+login_manager.init_app(app) # Conecta o gerenciador de login ao app Flask
+login_manager.login_view = "index" # define a rota de redirecionamento caso o usuário não esteja logado ("index" é o nome da função da rota)
+
+
+# Carregador de usuário 
+@login_manager.user_loader # Ensina o Flask-Login a reconhecer o usuário pelo id
+def carregar_usuario(usuario_id):
+    return Usuario.query.get(int(usuario_id)) # Busca o usuário no banco pelo id
 
 # Cria as tabelas no banco se ainda não existem
 with app.app_context():
@@ -39,6 +48,58 @@ def index():
 @app.route("/home")
 def home():
     return render_template("home.html")
+
+@app.route("/cadastro", methods=["GET", "POST"])
+def cadastro():
+    if request.method == "POST":
+
+        # Pega os dados do formulário
+        nome = request.form.get("nome")
+        email = request.form.get("email")
+        senha = request.form.get("senha")
+
+        # verifica se o email já existe no banco e, se existir, impede o cadastro e redireciona para a tela de cadastro
+        usuario_existente = Usuario.query.filter_by(email=email).first()
+        if usuario_existente:
+            return redirect(url_for("cadastro"))
+        
+        # Cria o hash da senha - nunca salva a senha pura no banco 
+        senha_hash = generate_password_hash(senha)
+
+        # Cria o novo usuário
+        novo_usuario = Usuario(nome=nome, email=email, senha=senha_hash)
+        db.session.add(novo_usuario)
+        db.session.commit()
+
+        # Redireciona para login após cadastro
+        return redirect(url_for("index"))
+    
+    return render_template("cadastro.html")
+
+@app.route("/login", methods=["POST"])
+def login():
+
+    # Pega os dados enviados pelo formulário
+    email = request.form.get("email")
+    senha = request.form.get("senha")
+
+    # Busca o usuário no banco pelo email
+    usuario = Usuario.query.filter_by(email=email).first()
+
+    # Verifica se o usuário não existe ou se a senha está incorreta
+    if not usuario or not check_password_hash(usuario.senha, senha):
+        return redirect(url_for("index"))
+    
+    login_user(usuario)
+
+    return redirect(url_for("home"))
+
+@app.route("/logout")
+@login_required # Só pode fazer logout quem está logado
+def logout():
+    logout_user()
+    return redirect(url_for("index"))
+
 
 @app.route("/arte")
 def arte():

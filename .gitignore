@@ -1,0 +1,17 @@
+# Banco de dados
+*.db
+
+# Imagens enviadas via upload
+static/images/*.jpg
+static/images/*.jpeg
+static/images/*.png
+static/images/*.gif
+static/images/*.webp
+
+# Cache do Python
+__pycache__/
+*.pyc
+
+# Ambiente virtual
+venv/
+env/
