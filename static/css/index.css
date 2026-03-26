@@ -8,25 +8,17 @@
 
 /* Corpo da página */
 body {
-    background-image: url("/static/images/arte-atelier.png");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-
-    /* FIX MOBILE: fixed não funciona no iOS Safari — usar scroll */
-    background-attachment: scroll;
-
+    background: #0a0a0a;
     min-height: 100vh;
-    min-height: 100dvh; 
-
+    min-height: 100dvh;
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
-
     position: relative;
     color: #fff;
 }
+
 
 /* FIX iOS: pseudo-elemento cobre a tela toda com a imagem de fundo,
    garantindo que apareça mesmo em navegadores mobile */
@@ -38,9 +30,6 @@ body::before {
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-
-    /* Escurecimento + blur por cima da imagem */
-    background-color: rgba(10, 10, 10, 0.5);
     backdrop-filter: blur(6px) saturate(0.85);
 
     z-index: -1;
