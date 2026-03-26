@@ -46,6 +46,7 @@ def index():
     return render_template("index.html")
 
 @app.route("/home")
+@login_required
 def home():
     return render_template("home.html")
 
@@ -61,7 +62,7 @@ def cadastro():
         # verifica se o email já existe no banco e, se existir, impede o cadastro e redireciona para a tela de cadastro
         usuario_existente = Usuario.query.filter_by(email=email).first()
         if usuario_existente:
-            return redirect(url_for("cadastro"))
+            return render_template("cadastro.html", erro="Email já cadastrado." )
         
         # Cria o hash da senha - nunca salva a senha pura no banco 
         senha_hash = generate_password_hash(senha)
@@ -88,7 +89,11 @@ def login():
 
     # Verifica se o usuário não existe ou se a senha está incorreta
     if not usuario or not check_password_hash(usuario.senha, senha):
-        return redirect(url_for("index"))
+        return render_template("index.html", erro="Email ou senha incorretos.")
+    
+    # Verifica se o usuário esta ativo
+    if not usuario.ativo:
+        return render_template("index.html", erro="Conta desativada")
     
     login_user(usuario)
 
@@ -100,18 +105,89 @@ def logout():
     logout_user()
     return redirect(url_for("index"))
 
+@app.route("/recuperar-senha", methods=["GET", "POST"])
+def recuperar_senha():
+    if request.method == "POST":
+
+        email = request.form.get("email")
+        nova_senha = request.form.get("nova_senha")
+
+        # Busca o usuário no banco pelo email digitado
+        usuario = Usuario.query.filter_by(email=email).first()
+
+        if not usuario:
+            return render_template("recuperar.html", erro="Email não encontrado")
+        
+        usuario.senha = generate_password_hash(nova_senha)
+        db.session.commit()
+
+        return render_template("recuperar.html", sucesso="Senha atualizada! faça login com a nova senha. ")
+
+    return render_template("recuperar.html")
+
+@app.route("/admin")
+@login_required
+def admin():
+    
+    if not current_user.is_admin:
+        return redirect(url_for("home"))
+    
+    usuarios = Usuario.query.all()
+
+    return render_template("admin.html", usuarios=usuarios)
+
+@app.route("/admin/toggleativar/<int:id>", methods=["POST"])
+@login_required
+def toggle_ativar(id):
+
+    # Só admin pode acessar
+    if not current_user.is_admin:
+        return redirect(url_for("home"))
+
+    # Busca o usuário no banco pelo id que veio na URL  
+    usuario = Usuario.query.get(id)
+
+    if not usuario:
+        return redirect(url_for("admin"))
+    
+    # Inverte o status 
+    usuario.ativo = not usuario.ativo
+    db.session.commit()
+
+    return redirect(url_for("admin"))
+
+@app.route("/admin/apagar/<int:id>", methods=["POST"])
+@login_required
+def apagar_usuario(id):
+
+    if not current_user.is_admin:
+        return redirect(url_for("home"))
+    
+    # Busca o usuário no banco pelo id que veio na URL
+    usuario = Usuario.query.get(id)
+
+    if not usuario:
+        return redirect(url_for("admin"))
+    
+    db.session.delete(usuario)
+    db.session.commit()
+
+    return redirect(url_for("admin"))
+
 
 @app.route("/arte")
+@login_required
 def arte():
     
     # Busca todas as artes no banco de dados
-    artes = Arte.query.all()
+    artes = Arte.query.filter_by(usuario_id=current_user.id).all()
     lista = [{"id": a.id, "imagem": a.imagem} for a in artes]
 
     return render_template("arte.html", artes=lista)
 
 
 @app.route("/arte/adicionar", methods=["POST"])
+@login_required
 def adicionar_arte():
    
     if "imagem" not in request.files:
@@ -131,13 +207,14 @@ def adicionar_arte():
     caminho_imagem = f"/static/images/{nome_seguro}"
 
     # Cria um novo objeto arte e salva no banco
-    nova = Arte(imagem=caminho_imagem)
+    nova = Arte(imagem=caminho_imagem, usuario_id=current_user.id)
     db.session.add(nova)
     db.session.commit()
 
     return jsonify({"id": nova.id, "imagem": nova.imagem}), 201
 
 @app.route("/arte/apagar", methods=["POST"])
+@login_required
 def apagar_arte():
    
     dados = request.get_json()
@@ -159,9 +236,10 @@ def apagar_arte():
 
 
 @app.route("/exposed")
+@login_required
 def exposed():
 
-    itens = Exposed.query.all()
+    itens = Exposed.query.filter_by(usuario_id=current_user.id).all()
 
     # Converte para dicionário incluindo as artes internas
     lista = []
@@ -177,6 +255,7 @@ def exposed():
     return render_template("exposed.html", exposed=lista)
 
 @app.route("/exposed/adicionar", methods=["POST"])
+@login_required
 def adicionar_exposed():
     
 
@@ -200,7 +279,7 @@ def adicionar_exposed():
     tag = request.form.get("tag", "")
 
     # Cria novo card do exposed no banco
-    novo = Exposed(imagem=caminho_imagem, titulo=titulo, tag=tag)
+    novo = Exposed(imagem=caminho_imagem, titulo=titulo, tag=tag, usuario_id=current_user.id)
     db.session.add(novo)
     db.session.commit()
 
@@ -215,6 +294,7 @@ def adicionar_exposed():
 
 
 @app.route("/exposed/apagar", methods=["POST"])
+@login_required
 def apagar_exposed(): # Define a função Python que será chamada quando a rota for acessada.
 
     dados = request.get_json()
@@ -234,6 +314,7 @@ def apagar_exposed(): # Define a função Python que será chamada quando a rota
     return jsonify({"sucesso": True}), 200
 
 @app.route("/exposed/adicionar-arte", methods=["POST"])
+@login_required
 def adicionar_arte_exposed():
 
     
@@ -272,6 +353,7 @@ def adicionar_arte_exposed():
 
 
 @app.route("/exposed/apagar-arte", methods=["POST"])
+@login_required
 def apagar_arte_interna():
 
     dados = request.get_json()
@@ -295,9 +377,10 @@ def apagar_arte_interna():
 
 
 @app.route("/inspiracoes")
+@login_required
 def inspiracoes():
     # Busca todas as informações no banco de dados de uma vez
-    inspiracoes = Inspiracao.query.all()
+    inspiracoes = Inspiracao.query.filter_by(usuario_id=current_user.id).all()
 
     # ORM retorna objetos → convertendo para dicionários para o Jinja usar
     lista = [{"id": i.id, "imagem": i.imagem} for i in inspiracoes]
@@ -307,6 +390,7 @@ def inspiracoes():
 
 
 @app.route("/inspiracoes/adicionar", methods=["POST"])
+@login_required
 def adicionar_inspiracao():
 
     # Verifica se o arquivo foi enviado na requisição
@@ -330,7 +414,7 @@ def adicionar_inspiracao():
     caminho_imagem = f"/static/images/{nome_seguro}"
 
     # Cria um novo objeto Inspiracao com o caminho salvo
-    nova = Inspiracao(imagem=caminho_imagem)
+    nova = Inspiracao(imagem=caminho_imagem, usuario_id=current_user.id)
 
     db.session.add(nova)  # Adiciona o objeto na sessão para salvar
     db.session.commit()   # salva no banco de verdade
@@ -339,6 +423,7 @@ def adicionar_inspiracao():
 
 
 @app.route("/inspiracoes/apagar", methods=["POST"])
+@login_required
 def apagar_inspiracao():
     
     # Recebe os dados enviados pelo JS em formato JSON

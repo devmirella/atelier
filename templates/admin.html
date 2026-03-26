@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atelier | Admin</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/admin.css">
+</head>
+<body>
+
+    <!-- Cabeçalho com título e botão de voltar -->
+    <div class="topo">
+        <h1>Painel Admin</h1>
+        <a href="/home" class="voltar">← Voltar</a>
+    </div>
+
+    <!-- Lista de todos os usuários cadastrados -->
+    <div class="lista-usuarios">
+
+        {% for user in usuarios %}
+        <div class="card-usuario">
+
+            <!-- Nome e email do usuário -->
+            <div class="info-usuario">
+                <span class="nome">{{ user.nome }}</span>
+                <span class="email">{{ user.email }}</span>
+            </div>
+
+            <!-- Badge de status -->
+            <span class="status {{ 'ativo' if user.ativo else 'inativo'}}">
+                {{ "Ativo" if user.ativo else "Inativo" }}
+            </span>
+
+            <!-- Botões de ação -->
+            <div class="acoes">
+
+                <!-- Ativar ou desativar conforme status atual -->
+                <form action="/admin/toggleativar/{{ user.id }}" method="POST">
+                    <button type="submit" class="btn">
+                        {{ "Desativar" if user.ativo else "Ativar "}}
+                    </button>
+
+                </form>
+
+                <!-- Apagar usuário permanentemente -->
+                <form action="/admin/apagar/{{ user.id }}" method="POST">
+                    <button type="submit" class="btn btn-apagar">Apagar</button>
+                </form>
+
+            </div>
+        </div>
+        {% endfor %}
+
+    </div>
+
+</body>
+</html>
+
+            
+            
+

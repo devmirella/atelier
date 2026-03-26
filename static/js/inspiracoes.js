@@ -1,12 +1,7 @@
 // Espera o HTML inteiro ser carregado antes de rodar qualquer JavaScript
 document.addEventListener("DOMContentLoaded", () => {
 
-    // Protege a página
-    if (localStorage.getItem("atelier_logado") !== "true") {
-         window.location.href = "/";
-         return;
-    }
-
+    
     const imagens = document.querySelectorAll(".inspo-img"); // Seleciona todas as imagens renderizadas 
     const lightbox = document.getElementById("lightbox"); // Seleciona o lightbox
     const lightboxImg = lightbox.querySelector("img"); // Seleciona a imagem dentro do lightbox 

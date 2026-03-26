@@ -134,3 +134,16 @@ button[type="submit"]:hover {
 #esqueceu-senha:hover {
     color: #fff;
 }
+
+/* Links abaixo do formulário */
+.formulario a {
+    display: block;         
+    margin-top: 14px;
+    font-size: 13px;        
+    color: rgba(255,255,255,0.45);  
+    text-decoration: none;
+}
+
+.formulario a:hover {
+    color: rgba(255,255,255,0.75);  
+}

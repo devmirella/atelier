@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atelier | Cadastro</title>
+        
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/index.css">
+
+</head>
+<body>
+
+    <main class="container">
+
+        <section class="formulario">
+            <h1>Atelier</h1>
+            <p class="subtitulo">Criar conta</p>
+            
+            <form action="/cadastro" method="POST">
+
+                <input type="text" name="nome" placeholder="Seu nome" required>
+                <input type="email" name="email" placeholder="Seu email" required>
+                <input type="password" name="senha" placeholder="Sua senha" required>
+
+                <button type="submit">Cadastrar</button>
+
+            </form>
+
+            <a href="/">Já tenho conta</a>
+
+        </section>
+    </main>
+</body>
+</html>

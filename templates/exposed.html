@@ -12,21 +12,14 @@
 
 <body>
 
-<script>
-  // Protege a página
-  if (localStorage.getItem("atelier_logado") !== "true") {
-    window.location.href = "/";
-  }
-</script>
-
 <div class="wrap">
 
   <div class="top">
     <button class="voltar" onclick="window.location.href='/home'">Voltar</button>
 
     <div class="titulo">
-      <h1>Exposed</h1>
-      <p>esboços de arte</p>
+      <h1>Esboços</h1>
+      <p>Meus esboços de arte</p>
     </div>
 
     <div style="width:110px"></div>
@@ -70,8 +63,7 @@
   </section>
 
   <form id="formExposed" class="form-minimo">
-    <input 
-      type="text" id="tituloExposed" placeholder="Título do esboço" required>
+    <input type="text" id="tituloExposed" placeholder="Título do esboço" required>
     <input type="text" id="tagExposed" placeholder="Tag ou categoria" required>
     <input type="file" id="imagemExposed" accept="image/*" required>
     <button type="submit">Adicionar</button>

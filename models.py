@@ -2,7 +2,7 @@
 from extensoes import db 
 from flask_login import UserMixin
 
-# Tabela: Usarios 
+# Tabela: Usuários 
 # Define a tabela de usuários no banco (db.Model) e adiciona recursos de autenticação (UserMixin)
 class Usuario(db.Model, UserMixin):
    
@@ -15,12 +15,13 @@ class Usuario(db.Model, UserMixin):
     senha    = db.Column(db.String(200), nullable=False) # Senha do usuário (obrigatória)
     nome     = db.Column(db.String(1000), nullable=False) # Nome do usuário (obrigatório)
     is_admin = db.Column(db.Boolean, default=False) # Indica se o usuário é administrador (padrão: não é)
+    ativo    = db.Column(db.Boolean, default=True)
 
     artes       = db.relationship("Arte", backref="dono",cascade="all, delete-orphan" )
     inspiracoes = db.relationship("Inspiracao", backref="dono", cascade="all, delete-orphan")
     exposed     = db.relationship("Exposed", backref="dono", cascade="all, delete-orphan")
 
-# Tabela: inpirações 
+# Tabela: inspirações 
 class Inspiracao(db.Model):
     
     __tablename__ = "inspiracoes"

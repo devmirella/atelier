@@ -22,23 +22,21 @@
 
     <div class="rodape">
         <div class="botoes">
-            <button id="btn-arte">Minha Arte</button>
-            <button id="btn-palavras">Exposed</button>
-            <button id="btn-inspiracao">Inspiração</button>
+            <button id="btn-arte">Artes</button>
+            <button id="btn-palavras">Esboços</button>
+            <button id="btn-inspiracao">Inspirações</button>
+        </div>
+
+        <div class="botoes">
             <button id="btn-sair">Sair</button>
         </div>
+
     </div>
 
 </main>
 
 <script>
 "use strict";
-
-
-/* Proteção de acesso */
-if (localStorage.getItem("atelier_logado") !== "true") {
-    window.location.href = "/";
-}
 
 /* Navgegação entre páginas */
 document.querySelector("#btn-arte").addEventListener("click", function () {
@@ -55,8 +53,7 @@ document.querySelector("#btn-inspiracao").addEventListener("click", function () 
 
 /* Sair */
 document.querySelector("#btn-sair").addEventListener("click", function () {
-    localStorage.removeItem("atelier_logado");
-    window.location.href = "/";
+    window.location.href = "/logout";
 });
 </script>
 </body>

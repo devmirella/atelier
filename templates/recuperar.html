@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atelier | Recuperar Senha</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/index.css">
+</head>
+<body>
+
+    <main class="container">
+
+        <section class="formulario">
+            <h1>Atelier</h1>
+            <p class="subtitulo">Recuperar senha</p>
+
+            <form action="/recuperar-senha" method="POST">
+
+                <!-- Flask lê com request.form.get("email") -->
+                <input type="email" name="email" placeholder="Seu email" required>
+                <!-- Flask lê com request.form.get("nova_senha") -->
+                <input type="password" name="nova_senha" placeholder="Nova senha" required>
+
+                {% if erro %}
+                <!-- Jinja exibe mensagem de erro vinda do Flask, se houver -->
+                <p style="color: #ff6b6b">{{ erro }}</p>
+                {% endif %}
+                
+                {% if sucesso %}
+                <!-- Jinja exibe mensagem de sucesso vinda do Flask, se houver -->
+                <p style="color: #17b3a3;">{{ sucesso }}</p>
+                {% endif %}
+
+                <button type="submit">Salvar nova senha</button>
+
+            </form>
+
+            <!-- Volta para a página de login -->
+            <a href="/">Voltar ao login</a>
+        </section>
+    </main>
+</body>
+</html>

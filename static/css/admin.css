@@ -1,0 +1,164 @@
+/* RESET */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* BODY / FUNDO */
+body {
+    min-height: 100vh;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #f2f2f2;
+
+    background-image: url("/static/images/fundo.png");
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
+
+/* CAMADA ESCURA */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: rgba(20, 15, 10, 0.75);
+    z-index: -1;
+}
+
+/* CABEÇALHO */
+.topo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 28px 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* TÍTULO */
+.topo h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    font-weight: 400;
+    letter-spacing: 0.05em;
+}
+
+/* BOTÃO VOLTAR */
+.voltar {
+    border: 1px solid rgba(255,255,255,0.25);
+    background: rgba(255,255,255,0.08);
+    color: #f2f2f2;
+    padding: 10px 18px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 14px;
+    text-decoration: none;
+    transition: background 0.3s ease;
+}
+
+.voltar:hover {
+    background: rgba(255,255,255,0.14);
+}
+
+/* LISTA DE USUÁRIOS */
+.lista-usuarios {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 0 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* CARD DO USUÁRIO */
+.card-usuario {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 14px;
+    padding: 20px 24px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+/* INFORMAÇÕES DO USUÁRIO */
+.info-usuario {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.info-usuario .nome {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 400;
+}
+
+.info-usuario .email {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+/* STATUS */
+.status {
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 20px;
+}
+
+.status.ativo {
+    background: rgba(100, 200, 120, 0.15);
+    color: #7ed99a;
+    border: 1px solid rgba(100, 200, 120, 0.25);
+}
+
+.status.inativo {
+    background: rgba(200, 80, 80, 0.15);
+    color: #e08080;
+    border: 1px solid rgba(200, 80, 80, 0.25);
+}
+
+/* AÇÕES */
+.acoes {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.acoes form {
+    margin: 0;
+}
+
+/* BOTÃO BASE */
+.btn {
+    background: none;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 20px;
+    padding: 8px 18px;
+    color: #f2f2f2;
+    font-family: 'Playfair Display', serif;
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+/* BOTÃO APAGAR */
+.btn-apagar {
+    border-color: rgba(200, 80, 80, 0.4);
+    color: #e08080;
+}
+
+.btn-apagar:hover {
+    background: rgba(200, 80, 80, 0.12);
+}
