@@ -18,7 +18,7 @@ app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 # Configuração do banco de dados 
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///atelier.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-app.config["SECRET_KEY"] = "atelier_secret_key"
+app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "atelier_secret_key")
 
 # Inicializa o banco de dados com o app
 db.init_app(app) # Conecta o banco de dados ao app Flask
