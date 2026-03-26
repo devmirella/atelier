@@ -7,10 +7,10 @@
 
 body {
     min-height: 100vh;
-    background-image: url("/static/images/arte-atelier.png");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+    min-height: 100dvh; /* FIX: altura real no mobile */
+
+    /* FIX iOS: fixed some no Safari mobile — imagem no pseudo-elemento */
+    background: #0f0d0b; /* fallback caso imagem demore */
 
     display: flex;
     align-items: center;
@@ -20,10 +20,23 @@ body {
     color: #fff;
 }
 
-/* Camada escura */
+/* FIX: imagem de fundo no pseudo-elemento com position:fixed
+   garante que apareça corretamente em iOS Safari */
 body::before {
     content: "";
-    position: absolute;
+    position: fixed;
+    inset: 0;
+    background-image: url("/static/images/arte-atelier.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: 0;
+}
+
+/* Camada escura */
+body::after {
+    content: "";
+    position: fixed;
     inset: 0;
     background: rgba(15, 15, 15, 0.65);
     z-index: 0;
@@ -35,7 +48,7 @@ main {
     z-index: 1;
 
     text-align: center;
-    padding: 40px;
+    padding: 40px 24px;
     width: 100%;
     max-width: 500px;
 
@@ -93,22 +106,78 @@ h1 {
     font-size: 14px;
 
     transition: background 0.3s, transform 0.2s;
+    min-width: 120px; /* FIX: botões não ficam muito pequenos */
 }
 
 .botoes button:hover {
     background-color: rgba(255, 255, 255, 0.15);
 }
 
-@media (max-width: 600px) {
+.rodape {
+    margin-bottom: -100px;
+}
+
+/* ─── RESPONSIVO ─────────────────────────────────────── */
+
+/* Tablet */
+@media (max-width: 768px) {
+    main {
+        padding: 32px 20px;
+        min-height: 50vh;
+    }
+
     h1 {
-        font-size: 34px;
+        font-size: 38px;
+    }
+
+    .topo {
+        margin-top: -40px;
+        margin-bottom: 80px;
+    }
+
+    .rodape {
+        margin-bottom: -60px;
+    }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+    main {
+        padding: 24px 16px;
+        max-width: 100%;
+    }
+
+    h1 {
+        font-size: 32px;
+        letter-spacing: 1px;
     }
 
     .frase {
         font-size: 15px;
     }
-}
 
-.rodape {
-    margin-bottom: -100px;
+    .topo {
+        margin-top: 0;
+        margin-bottom: 60px;
+    }
+
+    .botoes {
+        gap: 10px;
+        margin-bottom: 24px;
+    }
+
+    .botoes button {
+        flex: 1 1 calc(50% - 10px); /* FIX: 2 botões por linha no mobile */
+        min-width: 0;
+        padding: 11px 12px;
+        font-size: 13px;
+    }
+
+    .rodape {
+        margin-bottom: 0;
+    }
+
+    .linha {
+        width: 140px;
+    }
 }

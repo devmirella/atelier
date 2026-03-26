@@ -4,7 +4,7 @@
   --ink: #1a1a1a;
 }
 
-/* Reset  */
+/* Reset */
 * {
   margin: 0;
   padding: 0;
@@ -14,21 +14,39 @@
 /* Body / Fundo */
 body {
   min-height: 100vh;
+  min-height: 100dvh; /* FIX: altura real no mobile */
   font-family: Arial, Helvetica, sans-serif;
   color: var(--text);
 
+  /* FIX iOS: background-attachment:fixed some no Safari mobile */
+  background: #0f0d0b; /* fallback */
+}
+
+/* FIX: imagem de fundo via pseudo-elemento com position:fixed */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
   background-image: url("/static/images/fundo.png");
   background-size: cover;
   background-position: center;
-  background-attachment: fixed;
+  background-repeat: no-repeat;
+  z-index: -2;
 }
 
-body::before {
+body::after {
   content: "";
   position: fixed;
   inset: 0;
   background: rgba(20, 15, 10, 0.75);
   z-index: -1;
+}
+
+/* Wrapper */
+.wrap {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 28px 20px;
 }
 
 /* Topo */
@@ -40,12 +58,20 @@ body::before {
 }
 
 .voltar {
-  border: 1px solid rgba(255,255,255,0.25);
-  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.08);
   color: var(--text);
   padding: 10px 14px;
   border-radius: 12px;
   cursor: pointer;
+  text-decoration: none;
+  font-size: 14px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.voltar:hover {
+  background: rgba(255, 255, 255, 0.12);
 }
 
 .titulo {
@@ -69,12 +95,13 @@ body::before {
 
 .espaco {
   width: 110px;
+  flex-shrink: 0;
 }
 
 /* Linha */
 .linha {
   height: 1px;
-  background: rgba(255,255,255,0.18);
+  background: rgba(255, 255, 255, 0.18);
   margin: 18px 0 26px;
 }
 
@@ -87,15 +114,16 @@ body::before {
 
 /* Card */
 .paper {
-  background: rgba(255,255,255,0.08);
+  position: relative;
+  background: rgba(255, 255, 255, 0.08);
   backdrop-filter: blur(4px);
-  border: 1px solid rgba(255,255,255,0.18);
-  box-shadow: 0 12px 30px rgba(0,0,0,0.28);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.28);
   padding: 14px;
   border-radius: 16px;
 }
 
-/* imagem */
+/* Imagem */
 .inspo-img {
   width: 100%;
   aspect-ratio: 4 / 5;
@@ -105,11 +133,48 @@ body::before {
   display: block;
 }
 
-/* lightbox */
+/* BOTÃO APAGAR */
+.btn-apagar {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+
+  background: rgba(0, 0, 0, 0.5);
+  border: none;
+  border-radius: 50%;
+
+  width: 26px;
+  height: 26px;
+
+  color: #fff;
+  font-size: 16px;
+  line-height: 1;
+
+  cursor: pointer;
+
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.paper:hover .btn-apagar {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* FIX MOBILE: botão sempre visível no touch */
+@media (hover: none) {
+  .btn-apagar {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
+/* Lightbox */
 .lightbox {
   position: fixed;
   inset: 0;
-  background: rgba(20,15,10,0.85);
+  background: rgba(20, 15, 10, 0.85);
   display: none;
   align-items: center;
   justify-content: center;
@@ -120,18 +185,12 @@ body::before {
   max-width: 90vw;
   max-height: 90vh;
   border-radius: 12px;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
 }
 
-.wrap {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 28px 20px;
-}
-
-/* FORMULÁRIO DE ADIÇÃO – ESTILO ATELIER */
+/* FORMULÁRIO */
 .form-minimo {
-  margin: 80px auto 40px;
+  margin: 60px auto 40px;
   padding: 24px 28px;
   max-width: 420px;
 
@@ -146,7 +205,6 @@ body::before {
   text-align: center;
 }
 
-/* INPUT */
 .form-minimo input {
   background: transparent;
   border: none;
@@ -155,9 +213,10 @@ body::before {
   padding: 10px 6px;
   color: #f2f2f2;
   font-family: "Cormorant Garamond", serif;
-  font-size: 16px;
+  font-size: 16px; /* FIX: evita zoom no iOS */
 
   outline: none;
+  width: 100%;
 }
 
 .form-minimo input::placeholder {
@@ -165,7 +224,6 @@ body::before {
   font-style: italic;
 }
 
-/* BOTÃO */
 .form-minimo button {
   background: none;
   border: 1px solid rgba(255, 255, 255, 0.35);
@@ -191,38 +249,60 @@ body::before {
   opacity: 0.8;
 }
 
-/* BOTÃO APAGAR – DISCRETO */
-.paper {
-  position: relative;
+
+/* Tablet */
+@media (max-width: 900px) {
+  .grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 14px;
+  }
+
+  .titulo h1 {
+    font-size: 34px;
+  }
+
+  .espaco {
+    width: 80px;
+  }
 }
 
-.btn-apagar {
-  position: absolute;
-  top: 10px;
-  right: 10px;
+/* Mobile */
+@media (max-width: 600px) {
+  .wrap {
+    padding: 16px 12px;
+  }
 
-  background: rgba(0, 0, 0, 0.5);
-  border: none;
-  border-radius: 50%;
+  .top {
+    margin-bottom: 12px;
+  }
 
-  width: 26px;
-  height: 26px;
+  .titulo h1 {
+    font-size: 26px;
+  }
 
-  color: #fff;
-  font-size: 16px;
-  line-height: 1;
+  .titulo p {
+    font-size: 12px;
+    letter-spacing: 0.5px;
+  }
 
-  cursor: pointer;
+  .espaco {
+    display: none; 
+  }
 
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.2s ease;
+  .grid {/* FIX: 2 colunas no mobile */
+    gap: 10px;
+  }
+
+  .form-minimo {
+    margin: 40px auto 28px;
+    padding: 20px 16px;
+    width: 92%;
+  }
 }
 
-/* aparece só no hover do card */
-.paper:hover .btn-apagar {
-  opacity: 1;
-  pointer-events: auto;
+/* Mobile muito pequeno */
+@media (max-width: 360px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
 }
-
-

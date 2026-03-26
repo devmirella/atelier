@@ -9,11 +9,17 @@
 /* Corpo da página */
 body {
     background-image: url("/static/images/arte-atelier.png");
-    background-size: cover; 
+    background-size: cover;
     background-position: center;
-    min-height: 100vh;
+    background-repeat: no-repeat;
 
-    display: flex; /* centraliza o formulário */
+    /* FIX MOBILE: fixed não funciona no iOS Safari — usar scroll */
+    background-attachment: scroll;
+
+    min-height: 100vh;
+    min-height: 100dvh; 
+
+    display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
@@ -22,33 +28,48 @@ body {
     color: #fff;
 }
 
-/* Escurecimento geral para leitura */
+/* FIX iOS: pseudo-elemento cobre a tela toda com a imagem de fundo,
+   garantindo que apareça mesmo em navegadores mobile */
 body::before {
     content: "";
-    position: absolute;
+    position: fixed;
     inset: 0;
-    background: radial-gradient(
-        circle at center,
-        rgba(20,20,20,0.35),
-        rgba(10,10,10,0.65)
-    );
+    background-image: url("/static/images/arte-atelier.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    /* Escurecimento + blur por cima da imagem */
+    background-color: rgba(10, 10, 10, 0.5);
     backdrop-filter: blur(6px) saturate(0.85);
 
     z-index: -1;
 }
 
-/* Container agora é só o login */
+/* Overlay de escurecimento separado — sem background-image aqui */
+body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(
+        circle at center,
+        rgba(20, 20, 20, 0.35),
+        rgba(10, 10, 10, 0.65)
+    );
+    z-index: -1;
+}
+
+/* Container do login */
 .container {
     width: 90%;
     max-width: 420px;
 
-    padding: 40px;
-    
+    padding: 40px 32px;
+
     background: rgba(20, 20, 20, 0.25);
     backdrop-filter: blur(1.5px);
     border-radius: 16px;
-    box-shadow: 0 0 40px rgba(0,0,0,0.35);
-
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.35);
 
     position: relative;
     z-index: 1;
@@ -79,40 +100,42 @@ form {
 /* Campos */
 input {
     background: rgba(255, 255, 255, 0.07);
-    border: 1px solid rgba(255,255,255,0.12);
+    border: 1px solid rgba(255, 255, 255, 0.12);
     padding: 14px 18px;
     border-radius: 50px;
     color: #fff;
-    
+    font-size: 16px; 
+    width: 100%;
 }
 
 /* Placeholder */
 input::placeholder {
-    color: rgba(255,255,255,0.45);
+    color: rgba(255, 255, 255, 0.45);
 }
 
 /* Botão principal */
 button[type="submit"] {
     margin-top: 10px;
     padding: 14px;
-    background: rgba(255,255,255,0.15);
-    border: 1px solid rgba(255,255,255,0.25);
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.25);
     border-radius: 50px;
     color: #fff;
     font-weight: 500;
+    font-size: 16px;
     cursor: pointer;
+    width: 100%;
 }
 
-/* Hover */
 button[type="submit"]:hover {
-    background: rgba(255,255,255,0.22);
+    background: rgba(255, 255, 255, 0.22);
 }
 
 /* Botão cadastro */
 #btn-cadastro {
     background: transparent;
     border: none;
-    color: rgba(255,255,255,0.6);
+    color: rgba(255, 255, 255, 0.6);
     font-size: 14px;
     cursor: pointer;
 }
@@ -127,8 +150,9 @@ button[type="submit"]:hover {
 #esqueceu-senha {
     margin-top: 14px;
     font-size: 13px;
-    color: rgba(255,255,255,0.5);
+    color: rgba(255, 255, 255, 0.5);
     text-decoration: none;
+    display: block;
 }
 
 #esqueceu-senha:hover {
@@ -137,13 +161,48 @@ button[type="submit"]:hover {
 
 /* Links abaixo do formulário */
 .formulario a {
-    display: block;         
+    display: block;
     margin-top: 14px;
-    font-size: 13px;        
-    color: rgba(255,255,255,0.45);  
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.45);
     text-decoration: none;
 }
 
 .formulario a:hover {
-    color: rgba(255,255,255,0.75);  
+    color: rgba(255, 255, 255, 0.75);
+}
+
+
+/* Tablet */
+@media (max-width: 768px) {
+    .container {
+        padding: 32px 24px;
+    }
+
+    .formulario h1 {
+        font-size: 36px;
+    }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+    .container {
+        width: 92%;
+        padding: 28px 20px;
+        border-radius: 12px;
+    }
+
+    .formulario h1 {
+        font-size: 30px;
+    }
+
+    .subtitulo {
+        font-size: 14px;
+        margin-bottom: 22px;
+    }
+
+    input,
+    button[type="submit"] {
+        padding: 13px 16px;
+    }
 }

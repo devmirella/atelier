@@ -15,7 +15,7 @@
   --soft: 0 10px 25px rgba(0, 0, 0, 0.22);
 }
 
-/* Reset basico */
+/* Reset */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -25,15 +25,27 @@
 /* Body / Fundo */
 body {
   min-height: 100vh;
+  min-height: 100dvh; 
   font-family: Arial, Helvetica, sans-serif;
   color: var(--text);
 
+  /* FIX iOS: background-attachment:fixed some no Safari mobile */
+  background: #0f0d0b; 
+}
+
+/* FIX: imagem de fundo via pseudo-elemento com position:fixed */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
   background-image: url("/static/images/fundo.png");
   background-size: cover;
   background-position: center;
+  background-repeat: no-repeat;
+  z-index: -2;
 }
 
-body::before {
+body::after {
   content: "";
   position: fixed;
   inset: 0;
@@ -69,6 +81,10 @@ body::before {
   border-radius: 12px;
   cursor: pointer;
   transition: 0.2s ease;
+  text-decoration: none;
+  font-size: 14px;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .voltar:hover {
@@ -112,7 +128,7 @@ body::before {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 22px;
-  align-items: start; 
+  align-items: start;
 }
 
 /* CARD PAPER (externo) */
@@ -124,7 +140,6 @@ body::before {
   -webkit-backdrop-filter: blur(3px);
   border-radius: 14px;
   box-shadow: var(--soft);
-  /* REMOVIDO overflow:hidden — ele cortava o card ao abrir */
   padding: 12px;
   transition: box-shadow 0.2s ease, transform 0.2s ease;
 }
@@ -171,7 +186,7 @@ body::before {
   top: 2px;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 4; /* fica sobre a fita (z-index 3) */
+  z-index: 4;
 
   font-family: "Cormorant Garamond", serif;
   font-size: 13px;
@@ -182,14 +197,10 @@ body::before {
   letter-spacing: 0.5px;
   white-space: nowrap;
 
-  pointer-events: none; /* não interfere no clique do botão apagar */
+  pointer-events: none;
 }
 
-.titulo-fita:hover {
-  opacity: 1;
-}
-
-/* CARD INTERNO (expande ao clicar) */
+/* CARD INTERNO */
 .card {
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -197,12 +208,9 @@ body::before {
   padding: 12px;
   position: relative;
   margin-top: 6px;
-
-  /* Estado fechado: oculto */
   display: none;
 }
 
-/* Quando o paper tem classe .aberto, o card interno aparece */
 .paper.aberto .card {
   display: block;
 }
@@ -224,7 +232,7 @@ body::before {
   color: rgba(255, 255, 255, 1);
 }
 
-/* Conteúdo do card sempre visível quando card está aberto */
+/* Conteúdo do card */
 .card-conteudo {
   display: block;
   margin-top: 8px;
@@ -306,6 +314,17 @@ body::before {
   opacity: 1;
 }
 
+/* FIX MOBILE: sempre visível no touch */
+@media (hover: none) {
+  .fechar-arte {
+    opacity: 1;
+  }
+  .btn-apagar {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
 /* BOTÃO ADICIONAR ARTE */
 .adicionar {
   margin-top: 8px;
@@ -370,35 +389,21 @@ body::before {
   object-fit: contain;
 }
 
-/*  RESPONSIVO */
-@media (max-width: 980px) {
-  .grid-exposed {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 620px) {
-  .top { align-items: flex-start; }
-  .titulo h1 { font-size: 38px; }
-  .grid-exposed {
-    grid-template-columns: 1fr;
-  }
-}
-
 /* FORMULÁRIO */
 .form-minimo {
   margin-top: 40px;
   margin-bottom: 40px;
   padding: 24px 28px;
   max-width: 420px;
-  background-color: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,0.08);
+  background-color: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 14px;
   display: flex;
   flex-direction: column;
   gap: 16px;
   text-align: center;
   align-self: center;
+  width: 100%;
 }
 
 .form-minimo input {
@@ -408,8 +413,9 @@ body::before {
   padding: 10px 6px;
   color: #f2f2f2;
   font-family: "Cormorant Garamond", serif;
-  font-size: 16px;
+  font-size: 16px; 
   outline: none;
+  width: 100%;
 }
 
 .form-minimo input::placeholder {
@@ -435,3 +441,71 @@ body::before {
 }
 
 
+
+/* Tablet */
+@media (max-width: 980px) {
+  .grid-exposed {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .titulo h1 {
+    font-size: 36px;
+  }
+}
+
+/* Tablet pequeno */
+@media (max-width: 720px) {
+  .grid-exposed {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .titulo h1 {
+    font-size: 30px;
+  }
+
+  .titulo p {
+    font-size: 12px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .wrap {
+    padding: 16px 12px 32px;
+  }
+
+  .top {
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  .titulo h1 {
+    font-size: 26px;
+  }
+
+  .grid-exposed {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+
+  .form-minimo {
+    padding: 20px 16px;
+    margin-top: 28px;
+    margin-bottom: 28px;
+  }
+
+  .artes {
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  }
+
+  .arte {
+    height: 80px;
+  }
+}
+
+/* Mobile pequeno */
+@media (max-width: 360px) {
+  .grid-exposed {
+    grid-template-columns: 1fr;
+  }
+}

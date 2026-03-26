@@ -8,17 +8,27 @@
 /* BODY / FUNDO */
 body {
     min-height: 100vh;
+    min-height: 100dvh; /* FIX: altura real no mobile */
     font-family: Arial, Helvetica, sans-serif;
     color: #f2f2f2;
 
+    /* FIX iOS: background-attachment:fixed some no Safari mobile */
+    background: #0f0d0b; /* fallback */
+}
+
+/* FIX: imagem de fundo via pseudo-elemento com position:fixed */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
     background-image: url("/static/images/fundo.png");
     background-size: cover;
     background-position: center;
-    background-attachment: fixed;
+    background-repeat: no-repeat;
+    z-index: -2;
 }
 
-/* CAMADA ESCURA */
-body::before {
+body::after {
     content: "";
     position: fixed;
     inset: 0;
@@ -46,8 +56,8 @@ body::before {
 
 /* BOTÃO VOLTAR */
 .voltar {
-    border: 1px solid rgba(255,255,255,0.25);
-    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    background: rgba(255, 255, 255, 0.08);
     color: #f2f2f2;
     padding: 10px 18px;
     border-radius: 12px;
@@ -55,10 +65,11 @@ body::before {
     font-size: 14px;
     text-decoration: none;
     transition: background 0.3s ease;
+    white-space: nowrap;
 }
 
 .voltar:hover {
-    background: rgba(255,255,255,0.14);
+    background: rgba(255, 255, 255, 0.14);
 }
 
 /* LISTA DE USUÁRIOS */
@@ -90,17 +101,25 @@ body::before {
     display: flex;
     flex-direction: column;
     gap: 4px;
+    flex: 1;
+    min-width: 0; /
 }
 
 .info-usuario .nome {
     font-family: 'Playfair Display', serif;
     font-size: 18px;
     font-weight: 400;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .info-usuario .email {
     font-size: 13px;
     color: rgba(255, 255, 255, 0.5);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 /* STATUS */
@@ -110,6 +129,8 @@ body::before {
     text-transform: uppercase;
     padding: 4px 10px;
     border-radius: 20px;
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
 .status.ativo {
@@ -129,6 +150,8 @@ body::before {
     display: flex;
     gap: 10px;
     align-items: center;
+    flex-wrap: wrap;
+    flex-shrink: 0;
 }
 
 .acoes form {
@@ -147,6 +170,7 @@ body::before {
     letter-spacing: 0.04em;
     cursor: pointer;
     transition: all 0.3s ease;
+    white-space: nowrap;
 }
 
 .btn:hover {
@@ -161,4 +185,68 @@ body::before {
 
 .btn-apagar:hover {
     background: rgba(200, 80, 80, 0.12);
+}
+
+
+/* Tablet */
+@media (max-width: 768px) {
+    .topo {
+        padding: 20px 20px;
+    }
+
+    .topo h1 {
+        font-size: 26px;
+    }
+
+    .lista-usuarios {
+        padding: 0 20px;
+        margin: 28px auto;
+    }
+}
+
+/* Mobile */
+@media (max-width: 540px) {
+    .topo {
+        padding: 16px 14px;
+    }
+
+    .topo h1 {
+        font-size: 22px;
+    }
+
+    .lista-usuarios {
+        padding: 0 12px;
+        margin: 20px auto;
+        gap: 12px;
+    }
+
+    .card-usuario {
+        padding: 16px;
+        flex-direction: column; /* FIX: empilha info + botões no mobile */
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .info-usuario {
+        width: 100%;
+    }
+
+    .info-usuario .nome {
+        font-size: 16px;
+        white-space: normal; /* FIX: permite quebrar linha no mobile */
+    }
+
+    .info-usuario .email {
+        white-space: normal;
+    }
+
+    .acoes {
+        width: 100%;
+        justify-content: flex-end;
+    }
+
+    .btn {
+        padding: 7px 14px;
+        font-size: 12px;
+    }
 }

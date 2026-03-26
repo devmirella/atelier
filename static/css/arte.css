@@ -8,17 +8,30 @@
 /* BODY / FUNDO */
 body {
     min-height: 100vh;
+    min-height: 100dvh; /* FIX: altura real no mobile */
     font-family: Arial, Helvetica, sans-serif;
     color: #f2f2f2;
 
+    /* FIX iOS: background-attachment:fixed some no Safari mobile */
+    background: #0f0d0b; /* fallback */
+}
+
+/* FIX: imagem de fundo via pseudo-elemento com position:fixed
+   funciona em todos os browsers incluindo iOS Safari */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
     background-image: url("/static/images/fundo.png");
     background-size: cover;
     background-position: center;
-    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-color: rgba(20, 15, 10, 0.75);
+    z-index: -1;
 }
 
 /* CAMADA ESCURA */
-body::before {
+body::after {
     content: "";
     position: fixed;
     inset: 0;
@@ -36,7 +49,7 @@ body::before {
     margin: 0 auto;
 }
 
-/* CABEÇALHO - TÍTULO */
+/* TÍTULO */
 .topo h1 {
     font-family: 'Cormorant Garamond', serif;
     font-size: 36px;
@@ -44,34 +57,34 @@ body::before {
 
 /* BOTÃO VOLTAR */
 .voltar {
-    border: 1px solid rgba(255,255,255,0.25);
-    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    background: rgba(255, 255, 255, 0.08);
     color: #f2f2f2;
     padding: 10px 14px;
     border-radius: 12px;
     cursor: pointer;
+    text-decoration: none;
+    font-size: 14px;
+    white-space: nowrap;
 }
 
-/* BOTÃO VOLTAR HOVER */
 .voltar:hover {
-    background: rgba(255,255,255,0.12);
+    background: rgba(255, 255, 255, 0.12);
 }
 
-/* GALERIA */
+/* GALERIA WRAPPER */
 .galeria {
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); /* Cria colunas autoátocas, minimo 260px cada */
-    padding: 40px; /* Espaço interno nas bordas da galeria */
-    max-width: 1200px; /* Largura maxina - não estica além disso */
-    margin: 0 auto; /* Centraliza a galeria na página */
+    padding: 20px 18px 40px;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
-/* GALERIA */
+/* GRID */
 .grid-arte {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); /* Cria colunas autoátocas, minimo 260px cada */
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
     gap: 24px;
     width: 100%;
-
 }
 
 /* CARD */
@@ -82,11 +95,23 @@ body::before {
     border-radius: 8px;
 }
 
-/* CARD */
+/* IMAGEM CONTAINER */
 .imagem {
-    height: 160px;
+    height: 200px;
     background: rgba(255, 255, 255, 0.15);
     border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+/* IMAGEM */
+.imagem img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
 }
 
 /* ESTRELA DE FAVORITO */
@@ -99,12 +124,7 @@ body::before {
     color: #d8c27a;
 }
 
-/* Garante que o card seja referência de posição */
-.arte {
-    position: relative;
-}
-
-/* BOTÃO APAGAR ESCONDIDO POR PADRÃO */
+/* BOTÃO APAGAR */
 .btn-apagar {
     position: absolute;
     bottom: 10px;
@@ -129,88 +149,129 @@ body::before {
     transition: opacity 0.3s ease, background 0.3s ease;
 }
 
-/* MOSTRA O BOTÃO APAGAR AO PASSAR O MOUSE SOBRE O CARD */
 .arte:hover .btn-apagar {
     opacity: 1;
     pointer-events: auto;
 }
 
-/* EFEITO HOVER DO BOTÃO APAGAR */
+/* FIX MOBILE: hover não existe no touch — botão sempre visível */
+@media (hover: none) {
+    .btn-apagar {
+        opacity: 1;
+        pointer-events: auto;
+    }
+}
+
 .btn-apagar:hover {
     background: rgba(180, 30, 30, 0.95);
 }
 
-/* GARANTE QUE A IMAGEM SEJA REDIMENSIONADA PARA COBRIR TODO O ESPAÇO DO CARD, SEM DISTORCER A PROPORÇÃO */
-.imagem img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-    
-}
-
-/* CENTRALIZAR A IMAGEM DENTRO DO CARD */
-.imagem {
-    display: flex;
-    align-items: center;    
-    justify-content: center;
-
-}
-
-/* FORMULÁRIO DE ADIÇÃO – ESTILO ATELIER */
+/* FORMULÁRIO */
 .form-minimo {
-  margin: 80px auto 0;
-  padding: 24px 28px;
-  max-width: 420px;
+    margin: 60px auto 0;
+    padding: 24px 28px;
+    max-width: 420px;
 
-  background-color: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 14px;
+    background-color: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 14px;
 
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
 
-  text-align: center;
+    text-align: center;
 }
 
-/* INPUT */
 .form-minimo input {
-  background: transparent;
-  border: none;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
 
-  padding: 10px 6px;
-  color: #f2f2f2;
-  font-family: "Cormorant Garamond", serif;
-  font-size: 16px;
+    padding: 10px 6px;
+    color: #f2f2f2;
+    font-family: "Cormorant Garamond", serif;
+    font-size: 16px; /* FIX: evita zoom no iOS */
 
-  outline: none;
+    outline: none;
+    width: 100%;
 }
 
-/* PLACEHOLDER */
 .form-minimo input::placeholder {
-  color: rgba(255, 255, 255, 0.4);
-  font-style: italic;
+    color: rgba(255, 255, 255, 0.4);
+    font-style: italic;
 }
 
-/* BOTÃO */
 .form-minimo button {
-  background: none;
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  border-radius: 20px;
+    background: none;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    border-radius: 20px;
 
-  padding: 10px 22px;
-  color: #f2f2f2;
-  font-family: "Cormorant Garamond", serif;
-  font-size: 15px;
-  letter-spacing: 0.5px;
+    padding: 10px 22px;
+    color: #f2f2f2;
+    font-family: "Cormorant Garamond", serif;
+    font-size: 15px;
+    letter-spacing: 0.5px;
 
-  cursor: pointer;
-  transition: all 0.3s ease;
+    cursor: pointer;
+    transition: all 0.3s ease;
 }
 
-/* BOTÃO HOVER */
 .form-minimo button:hover {
-  background-color: rgba(255, 255, 255, 0.08);
+    background-color: rgba(255, 255, 255, 0.08);
+}
+
+/* ─── RESPONSIVO ─────────────────────────────────────── */
+
+/* Tablet */
+@media (max-width: 900px) {
+    .grid-arte {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 18px;
+    }
+
+    .topo {
+        padding: 20px 16px;
+    }
+
+    .topo h1 {
+        font-size: 28px;
+    }
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+    .topo {
+        padding: 16px 14px;
+    }
+
+    .topo h1 {
+        font-size: 24px;
+    }
+
+    .galeria {
+        padding: 14px 12px 32px;
+    }
+
+    .grid-arte {
+        grid-template-columns: repeat(2, 1fr); /* FIX: 2 colunas no mobile */
+        gap: 12px;
+    }
+
+    .imagem {
+        height: 150px;
+    }
+
+    .form-minimo {
+        margin: 40px auto 0;
+        padding: 20px 16px;
+        width: 92%;
+    }
+}
+
+/* Mobile muito pequeno */
+@media (max-width: 360px) {
+    .grid-arte {
+        grid-template-columns: 1fr;
+    }
 }
